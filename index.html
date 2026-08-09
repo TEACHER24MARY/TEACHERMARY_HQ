@@ -1525,43 +1525,111 @@
             if (lightbox) lightbox.classList.remove('open');
         }
 
-        function openContent(type) {
-            const grade = document.getElementById('grade-select')?.value || '';
-            const subject = document.getElementById('subject-select')?.value || '';
-            const term = document.getElementById('term-select')?.value || '';
-            const week = document.getElementById('week-select')?.value || '';
+       async function openContent(type) {
 
-            document.getElementById('modal-heading-title').innerText = `${subject} - ${type}`;
-            document.getElementById('modal-subtext').innerText = `${grade} | ${subject} | ${term} | ${week}`;
 
-            let uploadedFiles = JSON.parse(localStorage.getItem('teacherMaryHQ_files') || '[]');
-            const container = document.getElementById('modal-dynamic-container');
+    const grade =
+    document.getElementById('grade-select').value;
 
-            const match = uploadedFiles.find(f => 
-                f && f.category === type && 
-                f.grade === grade && f.subject === subject && f.term === term && f.week === week
-            );
 
-            if (match && match.dataUrl) {
-                container.innerHTML = `
-                    <div style="flex: 1; background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
-                        <button class="img-fullscreen-btn" onclick="openImageFullscreen('${match.dataUrl}')">⛶ View Full Screen Image</button>
-                        <img src="${match.dataUrl}" alt="${type}" style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;" onclick="openImageFullscreen('${match.dataUrl}')">
-                    </div>`;
-            } else if (type === 'Seatwork' && match && match.questions) {
-                let listHtml = '';
-                match.questions.forEach(q => {
-                    if (q && q.text && q.text.trim() !== "") {
-                        listHtml += `<div class="seatwork-item"><span class="seatwork-num">${q.num}.</span><span class="seatwork-text">${q.text}</span></div>`;
-                    }
-                });
-                container.innerHTML = `<div style="flex: 1; background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; overflow-y: auto;">${listHtml || 'No questions recorded.'}</div>`;
-            } else {
-                container.innerHTML = `<span style="color: var(--text-muted); text-align: center; padding: 40px;">No ${type} content uploaded for <strong>${grade} > ${subject} > ${term} > ${week}</strong>.</span>`;
-            }
+    const subject =
+    document.getElementById('subject-select').value;
 
-            document.getElementById('resource-modal')?.classList.add('open');
-        }
+
+    const term =
+    document.getElementById('term-select').value;
+
+
+    const week =
+    document.getElementById('week-select').value;
+
+
+
+    document.getElementById('modal-heading-title')
+    .innerText =
+    ${subject} - ${type};
+
+
+
+    const container =
+    document.getElementById(
+    'modal-dynamic-container'
+    );
+
+
+
+    const resource =
+    githubResources.find(item =>
+
+        item.grade === grade &&
+        item.subject === subject &&
+        item.term === term &&
+        item.week === week &&
+        item.category === type
+
+    );
+
+
+
+    if(resource){
+
+
+        container.innerHTML = 
+
+        <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100%;
+        ">
+
+        <img 
+        src="${resource.image}"
+        style="
+        max-width:100%;
+        max-height:70vh;
+        object-fit:contain;
+        ">
+
+        </div>
+
+        ;
+
+
+    }
+
+    else{
+
+
+        container.innerHTML = 
+
+        <p style="
+        text-align:center;
+        padding:40px;
+        color:#6b7280;
+        ">
+
+        No ${type} available.
+
+        <br><br>
+
+        Add the image in GitHub
+        and update resources.json.
+
+        </p>
+
+        ;
+
+
+    }
+
+
+
+    document
+    .getElementById('resource-modal')
+    .classList.add('open');
+
+}
 
         function openPptWithSeatworkIntegration() {
             const grade = document.getElementById('grade-select')?.value || '';
@@ -1852,5 +1920,38 @@
             }
         }
     </script>
+    let githubResources = [];
+
+
+// Load resources from GitHub
+async function loadGitHubResources(){
+
+    try{
+
+        const response = await fetch("resources.json");
+
+        githubResources = await response.json();
+
+        console.log("GitHub Resources Loaded:", githubResources);
+
+    }
+
+    catch(error){
+
+        console.error(
+        "Cannot load resources.json",
+        error
+        );
+
+    }
+
+}
+
+
+// Run when website opens
+window.addEventListener(
+"DOMContentLoaded",
+loadGitHubResources
+);
 </body>
 </html>
