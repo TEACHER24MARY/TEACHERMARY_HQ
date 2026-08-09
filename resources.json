@@ -1,0 +1,37 @@
+[
+  {
+    "grade": "Grade 3",
+    "subject": "Computer",
+    "term": "Term 1",
+    "week": "Week 1",
+    "category": "PowerPoint",
+    "image": "images/Grade3/Computer/Week1.png"
+  },
+
+  {
+    "grade": "Grade 3",
+    "subject": "Computer",
+    "term": "Term 1",
+    "week": "Week 2",
+    "category": "PowerPoint",
+    "image": "images/Grade3/Computer/Week2.png"
+  },
+
+  {
+    "grade": "Grade 3",
+    "subject": "Makabansa",
+    "term": "Term 1",
+    "week": "Week 1",
+    "category": "PowerPoint",
+    "image": "images/Grade3/Makabansa/Week1.png"
+  },
+
+  {
+    "grade": "Grade 3",
+    "subject": "Araling Panlipunan",
+    "term": "Term 1",
+    "week": "Week 1",
+    "category": "PowerPoint",
+    "image": "images/Grade3/AralingPanlipunan/Week1.png"
+  }
+]
