@@ -1413,6 +1413,35 @@
         let touchStartX = 0;
         let touchEndX = 0;
 
+let githubResources = [];
+
+async function loadGitHubResources(){
+
+    try{
+
+        const response = await fetch("resources.json");
+
+        githubResources = await response.json();
+
+        console.log(
+            "GitHub Resources Loaded:",
+            githubResources
+        );
+
+    } catch(error){
+
+        console.error(
+            "Cannot load resources.json",
+            error
+        );
+
+    }
+
+}
+
+loadGitHubResources();
+
+
         window.addEventListener('DOMContentLoaded', () => {
             const builderList = document.getElementById('questions-builder-list');
             let html = '';
@@ -1547,7 +1576,7 @@
 
     document.getElementById('modal-heading-title')
     .innerText =
-    ${subject} - ${type};
+    `${subject} - ${type}`;
 
 
 
@@ -1920,38 +1949,5 @@
             }
         }
     </script>
-    let githubResources = [];
-
-
-// Load resources from GitHub
-async function loadGitHubResources(){
-
-    try{
-
-        const response = await fetch("resources.json");
-
-        githubResources = await response.json();
-
-        console.log("GitHub Resources Loaded:", githubResources);
-
-    }
-
-    catch(error){
-
-        console.error(
-        "Cannot load resources.json",
-        error
-        );
-
-    }
-
-}
-
-
-// Run when website opens
-window.addEventListener(
-"DOMContentLoaded",
-loadGitHubResources
-);
 </body>
 </html>
