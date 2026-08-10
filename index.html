@@ -1415,6 +1415,20 @@
 
 let githubResources = [];
 
+// Google Sheets Seatwork Database
+const SEATWORK_SHEET_URL = "https://script.google.com/macros/s/AKfycbyXUt2mUdVFaB8CIPqitWa004bJY8rnkKrgmPuM8l15Pd8MymUSepNb6HbFj70X7Cdk/exec";
+let googleSeatwork = [];
+
+async function loadGoogleSeatwork(){
+    try{
+        const response = await fetch(SEATWORK_SHEET_URL);
+        googleSeatwork = await response.json();
+        console.log("Google Sheet Seatwork Loaded:", googleSeatwork);
+    }catch(error){
+        console.error("Cannot load Google Sheet Seatwork:", error);
+    }
+}
+
 async function loadGitHubResources(){
 
     try{
@@ -1441,6 +1455,7 @@ async function loadGitHubResources(){
 }
 
 loadGitHubResources();
+loadGoogleSeatwork();
 
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -1794,13 +1809,21 @@ async function openPptWithSeatworkIntegration() {
             if (labelElem) labelElem.innerText = labelText;
             document.getElementById('seatwork-dropdown-list')?.classList.remove('show');
 
-            let uploadedFiles = JSON.parse(localStorage.getItem('teacherMaryHQ_files') || '[]');
             const grade = document.getElementById('grade-select')?.value || '';
             const subject = document.getElementById('subject-select')?.value || '';
             const term = document.getElementById('term-select')?.value || '';
             const week = document.getElementById('week-select')?.value || '';
-            const seatworkMatch = uploadedFiles.find(f => f && f.category === 'Seatwork' && f.grade === grade && f.subject === subject && f.term === term && f.week === week);
-            populateSeatworkList(seatworkMatch);
+
+            const questions = googleSeatwork
+                .filter(q =>
+                    q.GRADE?.toUpperCase().replace(/\s+/g,'') === grade.toUpperCase().replace(/\s+/g,'') &&
+                    q.SUBJECT?.toUpperCase().replace(/\s+/g,'') === subject.toUpperCase().replace(/\s+/g,'') &&
+                    q.TERM?.toUpperCase().replace(/\s+/g,'') === term.toUpperCase().replace(/\s+/g,'') &&
+                    q.WEEK?.toUpperCase().replace(/\s+/g,'') === week.toUpperCase().replace(/\s+/g,'')
+                )
+                .map((q,index)=>({num:index+1,text:q.QUESTION}));
+
+            populateSeatworkList({questions: questions});
         }
 
         function updateDropdownLabel() {
@@ -1858,8 +1881,9 @@ async function openPptWithSeatworkIntegration() {
                 if (!hasAtLeastOne) { alert('Please enter at least one question.'); return; }
                 const entryData = { name: "Seatwork Questions (1-20)", grade, subject, term, week, category, questions, date: new Date().toLocaleDateString() };
                 if (editingIndex !== null) uploadedFiles[editingIndex] = entryData; else uploadedFiles.push(entryData);
-                localStorage.setItem('teacherMaryHQ_files', JSON.stringify(uploadedFiles));
-                resetUploadForm(); renderFileList(); alert('Saved successfully!');
+                resetUploadForm();
+                renderFileList();
+                alert('Seatwork is now managed through Google Sheets. Add or edit questions in your Google Sheet.');
             } else {
                 const fileInput = document.getElementById('upload-file');
                 if (fileInput && fileInput.files && fileInput.files[0]) {
