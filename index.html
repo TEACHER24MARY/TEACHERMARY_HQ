@@ -1604,94 +1604,106 @@ loadGitHubResources();
 }
 
 function openPptWithSeatworkIntegration() {
-            const grade = document.getElementById('grade-select')?.value || '';
-            const subject = document.getElementById('subject-select')?.value || '';
-            const term = document.getElementById('term-select')?.value || '';
-            const week = document.getElementById('week-select')?.value || '';
+    const grade = document.getElementById('grade-select')?.value || '';
+    const subject = document.getElementById('subject-select')?.value || '';
+    const term = document.getElementById('term-select')?.value || '';
+    const week = document.getElementById('week-select')?.value || '';
 
-            document.getElementById('modal-heading-title').innerText = `${subject} - PowerPoint Presentation & Seatwork`;
-            document.getElementById('modal-subtext').innerText = `${grade} | ${subject} | ${term} | ${week}`;
+    document.getElementById('modal-heading-title').innerText =
+        `${subject} - PowerPoint Presentation & Seatwork`;
 
-            let uploadedFiles = JSON.parse(localStorage.getItem('teacherMaryHQ_files') || '[]');
-            const container = document.getElementById('modal-dynamic-container');
+    document.getElementById('modal-subtext').innerText =
+        `${grade} | ${subject} | ${term} | ${week}`;
 
-            const pptMatches = uploadedFiles.filter(f => 
-                f && f.category === 'PowerPoint' && f.dataUrl &&
-                f.grade === grade && f.subject === subject && f.term === term && f.week === week
-            );
+    const container = document.getElementById('modal-dynamic-container');
 
-            const slideList = pptMatches.length > 0 ? pptMatches : uploadedFiles.filter(f => f && f.category === 'PowerPoint' && f.dataUrl);
-            currentSlideIndex = 0;
+    const githubGrade = grade.toUpperCase();
+    const githubSubject = subject.toUpperCase().replaceAll(" ", "");
+    const githubTerm = term.toUpperCase();
+    const githubWeek = week.toUpperCase();
 
-            const seatworkMatch = uploadedFiles.find(f => 
-                f && f.category === 'Seatwork' && 
-                f.grade === grade && f.subject === subject && f.term === term && f.week === week
-            );
+    const resource = githubResources.find(item =>
+        item.GRADE === githubGrade &&
+        item.SUBJECT === githubSubject &&
+        item.TERM === githubTerm &&
+        item.WEEK === githubWeek &&
+        item.CATEGORY === "POWERPOINT"
+    );
 
-            container.innerHTML = `
-                <div class="ppt-seatwork-container" id="ppt-seatwork-layout">
-                    <div class="ppt-pane">
-                        <div class="pane-header">
-                            <span id="carousel-header-title">📊 PowerPoint Presentation Slides</span>
-                        </div>
-                        <div class="ppt-view-area">
-                            ${slideList.length > 0 ? `
-                                <div class="ppt-carousel-wrapper" id="ppt-carousel-box">
-                                    ${slideList.map((slide, idx) => `
-                                        <div class="ppt-carousel-slide ${idx === 0 ? 'active' : ''}" data-index="${idx}">
-                                            <button class="img-fullscreen-btn" onclick="openImageFullscreen('${slide.dataUrl}')">⛶ Full Screen Image</button>
-                                            <img src="${slide.dataUrl}" alt="${slide.name || 'Slide ' + (idx + 1)}" onclick="openImageFullscreen('${slide.dataUrl}')">
-                                        </div>
-                                    `).join('')}
+    let slideList = [];
 
-                                    ${slideList.length > 1 ? `
-                                        <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)">&#10094;</button>
-                                        <button class="carousel-btn carousel-next" onclick="changeSlide(1)">&#10095;</button>
-                                    ` : ''}
+    if (resource && resource.SLIDES) {
+        slideList = resource.SLIDES.map(path => ({
+            dataUrl: path,
+            name: path.split("/").pop()
+        }));
+    }
 
-                                    <div class="carousel-indicators" id="carousel-indicator-text">
-                                        Slide 1 of ${slideList.length}
-                                    </div>
-                                </div>
-                            ` : '<span style="color: var(--text-muted); text-align: center; padding: 20px;">No PowerPoint slides uploaded yet. Go to Settings & Uploads to add your slides (.png, .jpg).</span>'}
-                            
-                            <button id="ppt-seatwork-toggle-btn" class="ppt-seatwork-icon-btn" onclick="toggleSeatworkPane()">
-                                📝 Seatwork
-                            </button>
-                        </div>
-                    </div>
+    currentSlideIndex = 0;
 
-                    <div class="seatwork-pane" id="right-seatwork-pane">
-                        <div class="pane-header">
-                            <span>📝 Seatwork Questions</span>
-                        </div>
-                        
-                        <div class="seatwork-dropdown-wrapper">
-                            <button class="seatwork-dropdown-toggle" onclick="toggleSeatworkDropdown(event)">
-                                <span id="selected-seatwork-label">Seatwork 1</span>
-                                <span>▼</span>
-                            </button>
-                            <div class="seatwork-dropdown-menu" id="seatwork-dropdown-list">
-                                <div class="seatwork-dropdown-item ${currentSeatworkRange === '1' ? 'active' : ''}" onclick="selectSeatworkRange('1', 'Seatwork 1')">Seatwork 1</div>
-                                <div class="seatwork-dropdown-item ${currentSeatworkRange === '1-2' ? 'active' : ''}" onclick="selectSeatworkRange('1-2', 'Seatwork 1-2')">Seatwork 1-2</div>
-                                <div class="seatwork-dropdown-item ${currentSeatworkRange === '1-5' ? 'active' : ''}" onclick="selectSeatworkRange('1-5', 'Seatwork 1-5')">Seatwork 1-5</div>
-                                <div class="seatwork-dropdown-item ${currentSeatworkRange === '1-10' ? 'active' : ''}" onclick="selectSeatworkRange('1-10', 'Seatwork 1-10')">Seatwork 1-10</div>
-                                <div class="seatwork-dropdown-item ${currentSeatworkRange === '1-20' ? 'active' : ''}" onclick="selectSeatworkRange('1-20', 'Seatwork 1-20 (All)')">Seatwork 1-20 (All)</div>
-                            </div>
-                        </div>
-
-                        <div class="seatwork-interactive-list" id="seatwork-interactive-list-body"></div>
-                    </div>
+    container.innerHTML = `
+        <div class="ppt-seatwork-container" id="ppt-seatwork-layout">
+            <div class="ppt-pane">
+                <div class="pane-header">
+                    <span>📊 PowerPoint Presentation Slides</span>
                 </div>
-            `;
+                <div class="ppt-view-area">
+                    ${
+                    slideList.length > 0 ? `
+                    <div class="ppt-carousel-wrapper" id="ppt-carousel-box">
+                        ${slideList.map((slide, idx) => `
+                        <div class="ppt-carousel-slide ${idx === 0 ? 'active' : ''}">
+                            <button class="img-fullscreen-btn"
+                            onclick="openImageFullscreen('${slide.dataUrl}')">
+                            ⛶ Full Screen Image
+                            </button>
+                            <img src="${slide.dataUrl}"
+                            onclick="openImageFullscreen('${slide.dataUrl}')">
+                        </div>
+                        `).join("")}
 
-            window.slideTotalCount = slideList.length;
-            updateDropdownLabel();
-            populateSeatworkList(seatworkMatch);
-            setupTouchSwipeListeners();
-            document.getElementById('resource-modal')?.classList.add('open');
-            window.addEventListener('click', closeDropdownOutside);
-        }
+                        ${slideList.length > 1 ? `
+                        <button class="carousel-btn carousel-prev"
+                        onclick="changeSlide(-1)">&#10094;</button>
+                        <button class="carousel-btn carousel-next"
+                        onclick="changeSlide(1)">&#10095;</button>
+                        ` : ""}
+
+                        <div class="carousel-indicators" id="carousel-indicator-text">
+                        Slide 1 of ${slideList.length}
+                        </div>
+                    </div>
+                    ` :
+                    `<span style="color:#6b7280;text-align:center;padding:20px;">
+                    No PowerPoint slides found in GitHub resources.json
+                    </span>`
+                    }
+
+                    <button id="ppt-seatwork-toggle-btn"
+                    class="ppt-seatwork-icon-btn"
+                    onclick="toggleSeatworkPane()">
+                    📝 Seatwork
+                    </button>
+                </div>
+            </div>
+
+            <div class="seatwork-pane" id="right-seatwork-pane">
+                <div class="pane-header">
+                    <span>📝 Seatwork Questions</span>
+                </div>
+                <div class="seatwork-interactive-list"
+                id="seatwork-interactive-list-body">
+                </div>
+            </div>
+        </div>
+    `;
+
+    window.slideTotalCount = slideList.length;
+
+    document.getElementById('resource-modal')?.classList.add('open');
+
+    setupTouchSwipeListeners();
+}
 
         function setupTouchSwipeListeners() {
             const carouselBox = document.getElementById('ppt-carousel-box');
