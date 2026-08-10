@@ -1427,6 +1427,7 @@ async function loadGitHubResources(){
             "GitHub Resources Loaded:",
             githubResources
         );
+        console.log("First Resource:", githubResources[0]);
 
     } catch(error){
 
@@ -1629,11 +1630,11 @@ async function openPptWithSeatworkIntegration() {
     const githubWeek = week.toUpperCase();
 
     const resource = githubResources.find(item =>
-        item.GRADE === githubGrade &&
-        item.SUBJECT === githubSubject &&
-        item.TERM === githubTerm &&
-        item.WEEK === githubWeek &&
-        item.CATEGORY === "POWERPOINT"
+        item.GRADE?.trim().toUpperCase() === githubGrade.trim().toUpperCase() &&
+        item.SUBJECT?.trim().replaceAll(" ","").toUpperCase() === githubSubject.trim().replaceAll(" ","").toUpperCase() &&
+        item.TERM?.trim().toUpperCase() === githubTerm.trim().toUpperCase() &&
+        item.WEEK?.trim().toUpperCase() === githubWeek.trim().toUpperCase() &&
+        item.CATEGORY?.trim().toUpperCase() === "POWERPOINT"
     );
 
     let slideList = [];
