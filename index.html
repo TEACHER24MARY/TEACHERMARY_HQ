@@ -1287,9 +1287,13 @@
             canvas.style.transform = `rotate(${currentAngle}deg)`;
             setTimeout(() => {
                 isSpinning = false;
-                const actualDeg = 360 - (currentAngle % 360);
+                // Correct pointer alignment calculation
+                const normalizedAngle = ((currentAngle % 360) + 360) % 360;
                 const arcSize = 360 / pool.length;
-                const winningIndex = Math.floor(actualDeg / arcSize) % pool.length;
+
+                // Pointer is at the top (270 degrees), adjust wheel rotation
+                const pointerAngle = (360 - normalizedAngle + 270) % 360;
+                const winningIndex = Math.floor(pointerAngle / arcSize) % pool.length;
                 activeResponder = pool[winningIndex];
                 const banner = document.getElementById("winnerAnnouncement");
                 banner.classList.remove("hidden"); banner.innerText = `Turn: ${activeResponder}!`;
