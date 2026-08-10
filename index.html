@@ -1730,6 +1730,22 @@ async function openPptWithSeatworkIntegration() {
 
     document.getElementById('resource-modal')?.classList.add('open');
 
+    // Load Seatwork from Google Sheets automatically
+    const seatworkQuestions = googleSeatwork
+        .filter(q =>
+            (q.GRADE || '').toUpperCase().replace(/\\s+/g,'') === grade.toUpperCase().replace(/\\s+/g,'') &&
+            (q.SUBJECT || '').toUpperCase().replace(/\\s+/g,'') === subject.toUpperCase().replace(/\\s+/g,'') &&
+            (q.TERM || '').toUpperCase().replace(/\\s+/g,'') === term.toUpperCase().replace(/\\s+/g,'') &&
+            (q.WEEK || '').toUpperCase().replace(/\\s+/g,'') === week.toUpperCase().replace(/\\s+/g,'') &&
+            (q.CATEGORY || '').toUpperCase() === 'SEATWORK'
+        )
+        .map((q,index)=>({
+            num:index+1,
+            text:q.QUESTION || q.TEXT || ''
+        }));
+
+    populateSeatworkList({questions: seatworkQuestions});
+
     setupTouchSwipeListeners();
 }
 
