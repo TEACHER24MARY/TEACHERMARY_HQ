@@ -1719,6 +1719,19 @@ async function openPptWithSeatworkIntegration() {
                 <div class="pane-header">
                     <span>📝 Seatwork Questions</span>
                 </div>
+
+                <div style="margin-bottom:10px;">
+                    <label style="font-size:0.85rem;font-weight:600;color:#6b7280;">
+                        Show Questions:
+                    </label>
+                    <select id="seatwork-range-select"
+                    onchange="changeSeatworkRange(this.value)"
+                    style="width:100%;padding:8px;border-radius:6px;border:1px solid #e5e7eb;">
+                        <option value="1">Question 1</option>
+                        ${Array.from({length:19},(_,i)=>`<option value="1-${i+2}">Question 1-${i+2}</option>`).join('')}
+                    </select>
+                </div>
+
                 <div class="seatwork-interactive-list"
                 id="seatwork-interactive-list-body">
                 </div>
@@ -1806,6 +1819,30 @@ async function openPptWithSeatworkIntegration() {
                 toggleButton.classList.add('active');
                 toggleButton.innerHTML = "❌ Close Seatwork";
             }
+        }
+
+        function changeSeatworkRange(range) {
+            currentSeatworkRange = range;
+
+            const grade = document.getElementById('grade-select')?.value || '';
+            const subject = document.getElementById('subject-select')?.value || '';
+            const term = document.getElementById('term-select')?.value || '';
+            const week = document.getElementById('week-select')?.value || '';
+
+            const questions = googleSeatwork
+                .filter(q =>
+                    (q.GRADE || '').toUpperCase().replace(/\\s+/g,'') === grade.toUpperCase().replace(/\\s+/g,'') &&
+                    (q.SUBJECT || '').toUpperCase().replace(/\\s+/g,'') === subject.toUpperCase().replace(/\\s+/g,'') &&
+                    (q.TERM || '').toUpperCase().replace(/\\s+/g,'') === term.toUpperCase().replace(/\\s+/g,'') &&
+                    (q.WEEK || '').toUpperCase().replace(/\\s+/g,'') === week.toUpperCase().replace(/\\s+/g,'') &&
+                    (q.CATEGORY || '').toUpperCase() === 'SEATWORK'
+                )
+                .map((q,index)=>({
+                    num:index+1,
+                    text:q.QUESTION || q.TEXT || ''
+                }));
+
+            populateSeatworkList({questions});
         }
 
         function toggleSeatworkDropdown(event) {
