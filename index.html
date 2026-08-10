@@ -732,25 +732,7 @@
             font-weight: 600;
             z-index: 10;
         }
-    
-/* Full Screen Activity Fix */
-.game-fullscreen-container {
-    padding: 0 !important;
-    overflow: hidden !important;
-    height: calc(100vh - 120px) !important;
-    width: 100% !important;
-    border: none !important;
-}
-
-.game-fullscreen-container iframe {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 850px !important;
-    border: none !important;
-    border-radius: 0 !important;
-}
-
-</style>
+    </style>
 </head>
 <body>
 
@@ -854,7 +836,7 @@
 
             <!-- Treasure Word Hunt Activity Section -->
             <section id="treasure-hunt-section" class="section">
-                <div class="settings-card game-fullscreen-container">
+                <div class="settings-card" style="padding: 0; overflow: hidden; height: 75vh; border: none;">
                     <iframe srcdoc='<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -915,7 +897,7 @@
     </style>
 </head>
 <body>
-    <h1>🏴‍☠️ Treasure Word Hunt</h1>
+    <button onclick="document.documentElement.requestFullscreen()" style="position:fixed;top:10px;right:10px;z-index:999;padding:8px;border-radius:8px;border:none;background:#b45309;color:white;font-weight:bold;">⛶ Fullscreen</button><h1>🏴‍☠️ Treasure Word Hunt</h1>
     <div class="subtitle">Continuous Voyage: Crack words consecutively to sail across sections!</div>
     <div class="teacher-credit">By Teacher Mary</div>
 
@@ -1021,21 +1003,6 @@
         };
         let secretWord = "", currentSubject = "", currentGame = "", currentKahulugan = "", guessedLetters = [], wrongGuesses = 0;
         const maxWrong = 5;
-        const GAME_SCORE_API = "https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec";
-
-        function saveGameScore(game, score, student, section){
-            fetch(GAME_SCORE_API,{
-                method:"POST",
-                mode:"no-cors",
-                body:JSON.stringify({
-                    GAME:game,
-                    GRADE:section.split(" - ")[0] || "",
-                    SECTION:section,
-                    STUDENT:student || "TEAM",
-                    SCORE:score
-                })
-            }).catch(err=>console.log("Score save error",err));
-        }
 
         window.onload = function() { loadPresetWord(); updateScoreBadge(); };
         function loadPresetWord() {
@@ -1080,7 +1047,7 @@
         function resetCurrentGame() { guessedLetters = []; wrongGuesses = 0; document.getElementById(&apos;ship&apos;).textContent = "⛵"; document.getElementById(&apos;statusMessage&apos;).textContent = "Crew, pick a letter!"; document.getElementById(&apos;nextButtonContainer&apos;).classList.add(&apos;hidden&apos;); buildWordDisplay(); buildKeyboard(); updateBoard(); }
         function resetAllScores() { if (confirm("I-reset sa 0 ang lahat ng puntos?")) { for (let key in sectionScores) sectionScores[key] = 0; localStorage.setItem(&apos;treasure_section_scores_hq&apos;, JSON.stringify(sectionScores)); updateScoreBadge(); openScoreboardModal(); } }
         function onActiveSectionChange() { updateScoreBadge(); }
-        function updateScoreBadge() { const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value; document.getElementById(&apos;sectionScoreBadge&apos;).textContent = `⭐ Points: ${sectionScores[activeSec] || 0}`; }
+        function updateScoreBadge() { const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value; document.getElementById(&apos;sectionScoreBadge&apos;).textContent = `⭐ Puntos: ${sectionScores[activeSec] || 0}`; }
         function buildWordDisplay() {
             const container = document.getElementById(&apos;wordDisplay&apos;); container.innerHTML = "";
             for (let i = 0; i < secretWord.length; i++) {
@@ -1124,9 +1091,8 @@
                 document.getElementById(&apos;nextButtonContainer&apos;).classList.remove(&apos;hidden&apos;);
                 disableAllKeys();
                 const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value;
-                sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 1; // 1 completed word = 1 point
+                sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 10;
                 localStorage.setItem(&apos;treasure_section_scores_hq&apos;, JSON.stringify(sectionScores));
-                saveGameScore('TREASURE',1,'TEAM',activeSec);
                 updateScoreBadge();
             }
         }
@@ -1143,24 +1109,14 @@
         }
         function closeScoreboardModal() { document.getElementById(&apos;scoreModal&apos;).style.display = &apos;none&apos;; }
     </script>
-
-<script>
-function openActivityFullscreen(btn){
-    const box = btn.closest('.game-fullscreen-container');
-    if(box && box.requestFullscreen){
-        box.requestFullscreen();
-    }
-}
-</script>
-
 </body>
-</html>' style="width: 100%; height: 85vh; min-height: 700px; border: none; border-radius: 8px;"></iframe>
+</html>' style="width: 100%; height: 70vh; border: none; border-radius: 8px;"></iframe>
                 </div>
             </section>
 
             <!-- Wheel of Question Activity Section -->
             <section id="wheel-question-section" class="section">
-                <div class="settings-card game-fullscreen-container">
+                <div class="settings-card" style="padding: 0; overflow: hidden; height: 75vh; border: none;">
                     <iframe srcdoc='<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1177,7 +1133,7 @@ function openActivityFullscreen(btn){
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
     <header class="bg-purple-700 text-white shadow-md p-3 flex flex-wrap justify-between items-center gap-2">
         <div class="flex items-center space-x-3">
-            <div><h1 class="text-base font-bold">🎡 Wheel of Question</h1><p class="text-xs text-purple-200">by Teacher Mary</p></div>
+            <div><button onclick="document.documentElement.requestFullscreen()" style="position:fixed;top:10px;right:10px;z-index:999;padding:8px;border-radius:8px;border:none;background:#7c3aed;color:white;font-weight:bold;">⛶ Fullscreen</button><h1 class="text-base font-bold">🎡 Wheel of Question</h1><p class="text-xs text-purple-200">by Teacher Mary</p></div>
             <div>
                 <select id="sectionSelect" onchange="changeSection(this.value)" class="bg-purple-800 border border-purple-500 rounded px-2 py-1 text-white text-xs font-medium">
                     <option value="Grade 3 - St. Monica">Grade 3 - St. Monica</option>
@@ -1239,21 +1195,6 @@ function openActivityFullscreen(btn){
             "Grade 4 - St. Martha": { students: ["Grace", "Hannah", "Ian", "Jack"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Grace": 0, "Hannah": 0, "Ian": 0, "Jack": 0} },
             "Grade 4 - St. Genevieve": { students: ["Mia", "Nathan", "Olivia", "Paul"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Mia": 0, "Nathan": 0, "Olivia": 0, "Paul": 0} }
         };
-        const GAME_SCORE_API = "https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec";
-        function saveGameScore(game, score, student, section){
-            fetch(GAME_SCORE_API,{
-                method:"POST",
-                mode:"no-cors",
-                body:JSON.stringify({
-                    GAME:game,
-                    GRADE:section.split(" - ")[0] || "",
-                    SECTION:section,
-                    STUDENT:student,
-                    SCORE:score
-                })
-            }).catch(err=>console.log(err));
-        }
-
         let currentSection = "Grade 3 - St. Monica", activeQuestionId = null, activeResponder = null, activeWheelPool = [...appData[currentSection].students], currentAngle = 0, isSpinning = false;
 
         window.onload = () => { renderDashboard(); drawWheel(); };
@@ -1295,7 +1236,12 @@ function openActivityFullscreen(btn){
                 banner.className = "p-3 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 mb-3";
                 banner.innerText = `Tama! +1 point kay ${activeResponder}!`;
                 appData[currentSection].scores[activeResponder] += 1;
-                saveGameScore('WHEEL',1,activeResponder,currentSection);
+                sendGameScore({
+                    game:"Wheel of Question",
+                    section:currentSection,
+                    student:activeResponder,
+                    points:1
+                });
                 renderScoreboard();
                 activeWheelPool = activeWheelPool.filter(s => s !== activeResponder);
                 setTimeout(() => { activeResponder = null; document.getElementById("assignedStudentBadge").classList.add("hidden"); }, 800);
@@ -1352,18 +1298,8 @@ function openActivityFullscreen(btn){
             }, 4000);
         }
     </script>
-
-<script>
-function openActivityFullscreen(btn){
-    const box = btn.closest('.game-fullscreen-container');
-    if(box && box.requestFullscreen){
-        box.requestFullscreen();
-    }
-}
-</script>
-
 </body>
-</html>' style="width: 100%; height: 85vh; min-height: 700px; border: none; border-radius: 8px;"></iframe>
+</html>' style="width: 100%; height: 70vh; border: none; border-radius: 8px;"></iframe>
                 </div>
             </section>
 
@@ -1482,6 +1418,24 @@ function openActivityFullscreen(btn){
         let currentSlideIndex = 0;
         let touchStartX = 0;
         let touchEndX = 0;
+
+
+// GOOGLE GAME SCORE DATABASE CONNECTION
+const GAME_SCORE_URL = "https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec";
+
+function sendGameScore(data){
+    fetch(GAME_SCORE_URL,{
+        method:"POST",
+        mode:"no-cors",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            timestamp:new Date().toISOString(),
+            ...data
+        })
+    }).catch(err=>console.log("Score save error:",err));
+}
 
 let githubResources = [];
 
@@ -2084,15 +2038,5 @@ async function openPptWithSeatworkIntegration() {
             }
         }
     </script>
-
-<script>
-function openActivityFullscreen(btn){
-    const box = btn.closest('.game-fullscreen-container');
-    if(box && box.requestFullscreen){
-        box.requestFullscreen();
-    }
-}
-</script>
-
 </body>
 </html>
