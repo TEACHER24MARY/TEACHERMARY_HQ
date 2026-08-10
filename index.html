@@ -1297,7 +1297,7 @@
                 </div>
             </section>
 
-            <div class="settings-card">          <h2>📂 GitHub Resource Manager</h2>          <p style="color: var(--text-muted); font-size:0.9rem;">             Your teaching materials are managed through GitHub.             Upload your images directly to the repository and update             the resources.json file.         </p>      </div>       <div class="settings-card">          <h2>📝 How to Update Images</h2>          <ol style="line-height:2; color:var(--text-main);">              <li>                 Open your GitHub repository.             </li>              <li>                 Upload your lesson images inside:                 <br>                 <strong>                 images → Grade → Subject → Week                 </strong>             </li>              <li>                 Update the                  <strong>resources.json</strong>                 file.             </li>              <li>                 Click:                 <strong>Commit Changes</strong>             </li>              <li>                 Refresh your TEACHER MARY HQ website.             </li>          </ol>      </div>       <div class="settings-card">          <h2>📁 Recommended File Format</h2>          <pre style="         background:#f3f4f6;         padding:15px;         border-radius:8px;         overflow:auto;         ">  images │ ├── Grade3 │    └── Computer │          ├── Week1.png │          ├── Week2.png │          └── Week3.png  resources.json          </pre>      </div>       <div class="settings-card">          <h2>✅ System Status</h2>          <p style="color:#10b981;font-weight:600;">             ☁️ Connected to GitHub Resource System         </p>          <p style="color:var(--text-muted);">             Updates made in GitHub will automatically appear             after the website refreshes.         </p>      </div>  <section id="settings-section" class="section">
+            <div class="settings-card">          <h2>📂 GitHub Resource Manager</h2>          <p style="color: var(--text-muted); font-size:0.9rem;">             Your teaching materials are managed through GitHub.             Upload your images directly to the repository and update             the resources.json file.         </p>      </div>       <div class="settings-card">          <h2>📝 How to Update Images</h2>          <ol style="line-height:2; color:var(--text-main);">              <li>                 Open your GitHub repository.             </li>              <li>                 Upload your lesson images inside:                 <br>                 <strong>                 images → Grade → Subject → Week                 </strong>             </li>              <li>                 Update the                  <strong>resources.json</strong>                 file.             </li>              <li>                 Click:                 <strong>Commit Changes</strong>             </li>              <li>                 Refresh your TEACHER MARY HQ website.             </li>          </ol>      </div>       <div class="settings-card">          <h2>📁 Recommended File Format</h2>          <pre style="         background:#f3f4f6;         padding:15px;         border-radius:8px;         overflow:auto;         ">  images │ ├── Grade3 │    └── Computer │          ├── Week1.png │          ├── Week2.png │          └── Week3.png  resources.json          </pre>      </div>       <div class="settings-card">          <h2>✅ System Status</h2>          <p style="color:#10b981;font-weight:600;">             ☁️ Connected to GitHub Resource System         </p>          <p style="color:var(--text-muted);">             Updates made in GitHub will automatically appear             after the website refreshes.         </p>      </div>  </section>s-section" class="section">
                 <div class="settings-card">
                     <h2 id="form-heading-title">Organized Resource Upload</h2>
                     <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Assign files or formatted 1–20 questions to specific grades, subjects, terms, and weeks.</p>
@@ -1556,107 +1556,56 @@ loadGitHubResources();
 
        async function openContent(type) {
 
+    const grade = document.getElementById('grade-select').value.toUpperCase();
+    const subject = document.getElementById('subject-select').value.toUpperCase().replaceAll(" ", "");
+    const term = document.getElementById('term-select').value.toUpperCase();
+    const week = document.getElementById('week-select').value.toUpperCase();
 
-    const grade =
-    document.getElementById('grade-select').value;
+    document.getElementById('modal-heading-title').innerText = `${subject} - ${type}`;
 
+    const container = document.getElementById('modal-dynamic-container');
 
-    const subject =
-    document.getElementById('subject-select').value;
-
-
-    const term =
-    document.getElementById('term-select').value;
-
-
-    const week =
-    document.getElementById('week-select').value;
-
-
-
-    document.getElementById('modal-heading-title')
-    .innerText =
-    `${subject} - ${type}`;
-
-
-
-    const container =
-    document.getElementById(
-    'modal-dynamic-container'
+    const resource = githubResources.find(item =>
+        item.GRADE === grade &&
+        item.SUBJECT === subject &&
+        item.TERM === term &&
+        item.WEEK === week &&
+        item.CATEGORY === type.toUpperCase()
     );
-
-
-
-    const resource =
-    githubResources.find(item =>
-
-        item.grade === grade &&
-        item.subject === subject &&
-        item.term === term &&
-        item.week === week &&
-        item.category === type
-
-    );
-
-
 
     if(resource){
 
-
         container.innerHTML = `
-
         <div style="
         display:flex;
         justify-content:center;
         align-items:center;
         height:100%;
         ">
-
-        <img 
-        src="${resource.image}"
+        <img
+        src="${resource.SLIDES[0]}"
         style="
         max-width:100%;
         max-height:70vh;
         object-fit:contain;
         ">
-
         </div>
-
         `;
 
-
-    }
-
-    else{
-
+    } else {
 
         container.innerHTML = `
-
         <p style="
         text-align:center;
         padding:40px;
         color:#6b7280;
         ">
-
         No ${type} available.
-
-        <br><br>
-
-        Add the image in GitHub
-        and update resources.json.
-
         </p>
-
         `;
-
-
     }
 
-
-
-    document
-    .getElementById('resource-modal')
-    .classList.add('open');
+    document.getElementById('resource-modal').classList.add('open');
 
 }
 
