@@ -1003,6 +1003,21 @@
         };
         let secretWord = "", currentSubject = "", currentGame = "", currentKahulugan = "", guessedLetters = [], wrongGuesses = 0;
         const maxWrong = 5;
+        const GAME_SCORE_API = "https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec";
+
+        function saveGameScore(game, score, student, section){
+            fetch(GAME_SCORE_API,{
+                method:"POST",
+                mode:"no-cors",
+                body:JSON.stringify({
+                    GAME:game,
+                    GRADE:section.split(" - ")[0] || "",
+                    SECTION:section,
+                    STUDENT:student || "TEAM",
+                    SCORE:score
+                })
+            }).catch(err=>console.log("Score save error",err));
+        }
 
         window.onload = function() { loadPresetWord(); updateScoreBadge(); };
         function loadPresetWord() {
@@ -1093,6 +1108,7 @@
                 const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value;
                 sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 10;
                 localStorage.setItem(&apos;treasure_section_scores_hq&apos;, JSON.stringify(sectionScores));
+                saveGameScore('TREASURE',10,'TEAM',activeSec);
                 updateScoreBadge();
             }
         }
@@ -1195,6 +1211,21 @@
             "Grade 4 - St. Martha": { students: ["Grace", "Hannah", "Ian", "Jack"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Grace": 0, "Hannah": 0, "Ian": 0, "Jack": 0} },
             "Grade 4 - St. Genevieve": { students: ["Mia", "Nathan", "Olivia", "Paul"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Mia": 0, "Nathan": 0, "Olivia": 0, "Paul": 0} }
         };
+        const GAME_SCORE_API = "https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec";
+        function saveGameScore(game, score, student, section){
+            fetch(GAME_SCORE_API,{
+                method:"POST",
+                mode:"no-cors",
+                body:JSON.stringify({
+                    GAME:game,
+                    GRADE:section.split(" - ")[0] || "",
+                    SECTION:section,
+                    STUDENT:student,
+                    SCORE:score
+                })
+            }).catch(err=>console.log(err));
+        }
+
         let currentSection = "Grade 3 - St. Monica", activeQuestionId = null, activeResponder = null, activeWheelPool = [...appData[currentSection].students], currentAngle = 0, isSpinning = false;
 
         window.onload = () => { renderDashboard(); drawWheel(); };
@@ -1236,6 +1267,7 @@
                 banner.className = "p-3 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 mb-3";
                 banner.innerText = `Tama! +1 point kay ${activeResponder}!`;
                 appData[currentSection].scores[activeResponder] += 1;
+                saveGameScore('WHEEL',1,activeResponder,currentSection);
                 renderScoreboard();
                 activeWheelPool = activeWheelPool.filter(s => s !== activeResponder);
                 setTimeout(() => { activeResponder = null; document.getElementById("assignedStudentBadge").classList.add("hidden"); }, 800);
