@@ -1658,16 +1658,15 @@ async function openPptWithSeatworkIntegration() {
                     ${
                     slideList.length > 0 ? `
                     <div class="ppt-carousel-wrapper" id="ppt-carousel-box">
-                        ${slideList.map((slide, idx) => `
-                        <div class="ppt-carousel-slide ${idx === 0 ? 'active' : ''}">
+                        <div class="ppt-carousel-slide active">
                             <button class="img-fullscreen-btn"
-                            onclick="openImageFullscreen('${slide.dataUrl}')">
+                            onclick="openImageFullscreen(slideList[currentSlideIndex].dataUrl)">
                             ⛶ Full Screen Image
                             </button>
-                            <img src="${slide.dataUrl}"
-                            onclick="openImageFullscreen('${slide.dataUrl}')">
+                            <img id="current-slide-image"
+                            src="${slideList[0]?.dataUrl || ''}"
+                            onclick="openImageFullscreen(this.src)">
                         </div>
-                        `).join("")}
 
                         ${slideList.length > 1 ? `
                         <button class="carousel-btn carousel-prev"
@@ -1725,15 +1724,35 @@ async function openPptWithSeatworkIntegration() {
         }
 
         function changeSlide(direction) {
-            const slides = document.querySelectorAll('.ppt-carousel-slide');
-            if (!slides || slides.length === 0) return;
-            slides[currentSlideIndex].classList.remove('active');
+            const total = window.slideTotalCount || 0;
+            if (total === 0) return;
+
             currentSlideIndex += direction;
-            if (currentSlideIndex < 0) currentSlideIndex = slides.length - 1;
-            else if (currentSlideIndex >= slides.length) currentSlideIndex = 0;
-            slides[currentSlideIndex].classList.add('active');
+            if (currentSlideIndex < 0) currentSlideIndex = total - 1;
+            else if (currentSlideIndex >= total) currentSlideIndex = 0;
+
+            const img = document.getElementById('current-slide-image');
+            if (img && githubResources) {
+                const grade = document.getElementById('grade-select')?.value || '';
+                const subject = document.getElementById('subject-select')?.value || '';
+                const term = document.getElementById('term-select')?.value || '';
+                const week = document.getElementById('week-select')?.value || '';
+
+                const resource = githubResources.find(item =>
+                    item.GRADE?.trim().toUpperCase() === grade.toUpperCase() &&
+                    item.SUBJECT?.trim().replaceAll(' ','').toUpperCase() === subject.replaceAll(' ','').toUpperCase() &&
+                    item.TERM?.trim().toUpperCase() === term.toUpperCase() &&
+                    item.WEEK?.trim().toUpperCase() === week.toUpperCase() &&
+                    item.CATEGORY?.trim().toUpperCase() === 'POWERPOINT'
+                );
+
+                if (resource?.SLIDES?.[currentSlideIndex]) {
+                    img.src = resource.SLIDES[currentSlideIndex];
+                }
+            }
+
             const indicator = document.getElementById('carousel-indicator-text');
-            if (indicator) indicator.innerText = `Slide ${currentSlideIndex + 1} of ${slides.length}`;
+            if (indicator) indicator.innerText = `Slide ${currentSlideIndex + 1} of ${total}`;
         }
 
         function toggleSeatworkPane() {
