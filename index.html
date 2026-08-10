@@ -732,7 +732,25 @@
             font-weight: 600;
             z-index: 10;
         }
-    </style>
+    
+/* Full Screen Activity Fix */
+.game-fullscreen-container {
+    padding: 0 !important;
+    overflow: hidden !important;
+    height: calc(100vh - 120px) !important;
+    width: 100% !important;
+    border: none !important;
+}
+
+.game-fullscreen-container iframe {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 850px !important;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+</style>
 </head>
 <body>
 
@@ -836,7 +854,7 @@
 
             <!-- Treasure Word Hunt Activity Section -->
             <section id="treasure-hunt-section" class="section">
-                <div class="settings-card" style="padding: 0; overflow: hidden; height: 75vh; border: none;">
+                <div class="settings-card game-fullscreen-container">
                     <iframe srcdoc='<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1106,7 +1124,7 @@
                 document.getElementById(&apos;nextButtonContainer&apos;).classList.remove(&apos;hidden&apos;);
                 disableAllKeys();
                 const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value;
-                sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 1;
+                sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 1; // 1 completed word = 1 point
                 localStorage.setItem(&apos;treasure_section_scores_hq&apos;, JSON.stringify(sectionScores));
                 saveGameScore('TREASURE',1,'TEAM',activeSec);
                 updateScoreBadge();
@@ -1125,6 +1143,16 @@
         }
         function closeScoreboardModal() { document.getElementById(&apos;scoreModal&apos;).style.display = &apos;none&apos;; }
     </script>
+
+<script>
+function openActivityFullscreen(btn){
+    const box = btn.closest('.game-fullscreen-container');
+    if(box && box.requestFullscreen){
+        box.requestFullscreen();
+    }
+}
+</script>
+
 </body>
 </html>' style="width: 100%; height: 85vh; min-height: 700px; border: none; border-radius: 8px;"></iframe>
                 </div>
@@ -1132,7 +1160,7 @@
 
             <!-- Wheel of Question Activity Section -->
             <section id="wheel-question-section" class="section">
-                <div class="settings-card" style="padding: 0; overflow: hidden; height: 75vh; border: none;">
+                <div class="settings-card game-fullscreen-container">
                     <iframe srcdoc='<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1324,6 +1352,16 @@
             }, 4000);
         }
     </script>
+
+<script>
+function openActivityFullscreen(btn){
+    const box = btn.closest('.game-fullscreen-container');
+    if(box && box.requestFullscreen){
+        box.requestFullscreen();
+    }
+}
+</script>
+
 </body>
 </html>' style="width: 100%; height: 85vh; min-height: 700px; border: none; border-radius: 8px;"></iframe>
                 </div>
@@ -2046,5 +2084,15 @@ async function openPptWithSeatworkIntegration() {
             }
         }
     </script>
+
+<script>
+function openActivityFullscreen(btn){
+    const box = btn.closest('.game-fullscreen-container');
+    if(box && box.requestFullscreen){
+        box.requestFullscreen();
+    }
+}
+</script>
+
 </body>
 </html>
