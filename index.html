@@ -1062,7 +1062,7 @@
         function resetCurrentGame() { guessedLetters = []; wrongGuesses = 0; document.getElementById(&apos;ship&apos;).textContent = "⛵"; document.getElementById(&apos;statusMessage&apos;).textContent = "Crew, pick a letter!"; document.getElementById(&apos;nextButtonContainer&apos;).classList.add(&apos;hidden&apos;); buildWordDisplay(); buildKeyboard(); updateBoard(); }
         function resetAllScores() { if (confirm("I-reset sa 0 ang lahat ng puntos?")) { for (let key in sectionScores) sectionScores[key] = 0; localStorage.setItem(&apos;treasure_section_scores_hq&apos;, JSON.stringify(sectionScores)); updateScoreBadge(); openScoreboardModal(); } }
         function onActiveSectionChange() { updateScoreBadge(); }
-        function updateScoreBadge() { const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value; document.getElementById(&apos;sectionScoreBadge&apos;).textContent = `⭐ Puntos: ${sectionScores[activeSec] || 0}`; }
+        function updateScoreBadge() { const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value; document.getElementById(&apos;sectionScoreBadge&apos;).textContent = `⭐ Points: ${sectionScores[activeSec] || 0}`; }
         function buildWordDisplay() {
             const container = document.getElementById(&apos;wordDisplay&apos;); container.innerHTML = "";
             for (let i = 0; i < secretWord.length; i++) {
@@ -1106,9 +1106,9 @@
                 document.getElementById(&apos;nextButtonContainer&apos;).classList.remove(&apos;hidden&apos;);
                 disableAllKeys();
                 const activeSec = document.getElementById(&apos;activeSectionSelect&apos;).value;
-                sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 10;
+                sectionScores[activeSec] = (sectionScores[activeSec] || 0) + 1;
                 localStorage.setItem(&apos;treasure_section_scores_hq&apos;, JSON.stringify(sectionScores));
-                saveGameScore('TREASURE',10,'TEAM',activeSec);
+                saveGameScore('TREASURE',1,'TEAM',activeSec);
                 updateScoreBadge();
             }
         }
@@ -1126,7 +1126,7 @@
         function closeScoreboardModal() { document.getElementById(&apos;scoreModal&apos;).style.display = &apos;none&apos;; }
     </script>
 </body>
-</html>' style="width: 100%; height: 70vh; border: none; border-radius: 8px;"></iframe>
+</html>' style="width: 100%; height: 85vh; min-height: 700px; border: none; border-radius: 8px;"></iframe>
                 </div>
             </section>
 
@@ -1325,7 +1325,7 @@
         }
     </script>
 </body>
-</html>' style="width: 100%; height: 70vh; border: none; border-radius: 8px;"></iframe>
+</html>' style="width: 100%; height: 85vh; min-height: 700px; border: none; border-radius: 8px;"></iframe>
                 </div>
             </section>
 
