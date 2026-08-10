@@ -1115,199 +1115,728 @@
             </section>
 
             <!-- Wheel of Question Activity Section -->
-            <section id="wheel-question-section" class="section">
-                <div class="settings-card" style="padding: 0; overflow: hidden; height: 75vh; border: none;">
-                    <iframe srcdoc='<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheel of Question by Teacher Mary</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .wheel-container { position: relative; width: 240px; height: 240px; }
-        #wheelCanvas { transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1); }
-        .pointer { position: top; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #ef4444; z-index: 20; }
-    </style>
-</head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
-    <header class="bg-purple-700 text-white shadow-md p-3 flex flex-wrap justify-between items-center gap-2">
-        <div class="flex items-center space-x-3">
-            <div><button onclick="document.documentElement.requestFullscreen()" style="position:fixed;top:10px;right:10px;z-index:999;padding:8px;border-radius:8px;border:none;background:#7c3aed;color:white;font-weight:bold;">⛶ Fullscreen</button><h1 class="text-base font-bold">🎡 Wheel of Question</h1><p class="text-xs text-purple-200">by Teacher Mary</p></div>
-            <div>
-                <select id="sectionSelect" onchange="changeSection(this.value)" class="bg-purple-800 border border-purple-500 rounded px-2 py-1 text-white text-xs font-medium">
-                    <option value="Grade 3 - St. Monica">Grade 3 - St. Monica</option>
-                    <option value="Grade 3 - St. Germaine">Grade 3 - St. Germaine</option>
-                    <option value="Grade 3 - St. Agnes">Grade 3 - St. Agnes</option>
-                    <option value="Grade 4 - St. Cecilia">Grade 4 - St. Cecilia</option>
-                    <option value="Grade 4 - St. Martha">Grade 4 - St. Martha</option>
-                    <option value="Grade 4 - St. Genevieve">Grade 4 - St. Genevieve</option>
-                </select>
-            </div>
-        </div>
-        <button onclick="resetGame()" class="bg-rose-600 hover:bg-rose-500 px-3 py-1 rounded text-xs font-medium text-white">🔄 Reset</button>
-    </header>
+<section id="wheel-question-section" class="section">
+<div class="settings-card" style="padding:0;overflow:hidden;height:75vh;border:none;">
+<iframe srcdoc='&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Araling Panlipunan 4 - Wheel of Question by Teacher Mary&lt;/title&gt;
+    &lt;script&gt;const GAME_SCORE_URL=&quot;https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec&quot;;function sendGameScore(d){fetch(GAME_SCORE_URL,{method:&quot;POST&quot;,mode:&quot;no-cors&quot;,headers:{&quot;Content-Type&quot;:&quot;application/json&quot;},body:JSON.stringify({timestamp:new Date().toISOString(),...d})});}&lt;/script&gt;&lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+        }
+        #wheelCanvas {
+            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
+        }
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 26px solid #ef4444;
+            z-index: 20;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;button onclick=&quot;document.documentElement.requestFullscreen()&quot; style=&quot;position:fixed;top:10px;right:10px;z-index:999;padding:8px;background:#7c3aed;color:white;border:none;border-radius:8px;font-weight:bold&quot;&gt;⛶ Fullscreen&lt;/button&gt; class=&quot;bg-slate-50 min-h-screen text-slate-800 flex flex-col&quot;&gt;
 
-    <main class="flex-1 max-w-6xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4 items-start overflow-y-auto">
-        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col">
-            <h2 class="text-sm font-bold text-slate-700 mb-3 border-b pb-2 flex justify-between items-center">
-                <span>Questions Dashboard (1–10)</span>
-                <span id="currentActiveSectionDisplay" class="text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full border border-purple-200">Grade 3 - St. Monica</span>
-            </h2>
-            <div id="questionsGrid" class="grid grid-cols-5 gap-2 mb-4"></div>
+    &lt;!-- Top Navigation &amp; Controls --&gt;
+    &lt;header class=&quot;bg-indigo-700 text-white shadow-md p-4 flex flex-wrap justify-between items-center gap-4&quot;&gt;
+        &lt;div class=&quot;flex items-center space-x-4&quot;&gt;
+            &lt;div&gt;
+                &lt;h1 class=&quot;text-xl font-bold tracking-wide&quot;&gt;📚 Araling Panlipunan - Wheel of Question&lt;/h1&gt;
+                &lt;p class=&quot;text-xs text-indigo-200&quot;&gt;by Teacher Mary&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;label for=&quot;sectionSelect&quot; class=&quot;text-xs uppercase tracking-wider text-indigo-200 block&quot;&gt;Section&lt;/label&gt;
+                &lt;select id=&quot;sectionSelect&quot; class=&quot;bg-indigo-800 border border-indigo-500 rounded px-3 py-1 text-white font-medium focus:outline-none focus:ring-2 focus:ring-indigo-400&quot;&gt;
+                    &lt;option value=&quot;Grade 3 - St. Monica&quot;&gt;Grade 3 - St. Monica&lt;/option&gt;
+                    &lt;option value=&quot;Grade 3 - St. Germaine&quot;&gt;Grade 3 - St. Germaine&lt;/option&gt;
+                    &lt;option value=&quot;Grade 3 - St. Agnes&quot;&gt;Grade 3 - St. Agnes&lt;/option&gt;
+                    &lt;option value=&quot;Grade 4 - St. Cecilia&quot;&gt;Grade 4 - St. Cecilia&lt;/option&gt;
+                    &lt;option value=&quot;Grade 4 - St. Martha&quot;&gt;Grade 4 - St. Martha&lt;/option&gt;
+                    &lt;option value=&quot;Grade 4 - St. Genevieve&quot;&gt;Grade 4 - St. Genevieve&lt;/option&gt;
+                &lt;/select&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;flex items-center space-x-3&quot;&gt;
+            &lt;button onclick=&quot;openSettings()&quot; class=&quot;bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded font-medium text-sm transition shadow flex items-center gap-1.5&quot;&gt;
+                ⚙️ Settings
+            &lt;/button&gt;
+            &lt;button onclick=&quot;resetGame()&quot; class=&quot;bg-rose-600 hover:bg-rose-500 px-4 py-2 rounded font-medium text-sm transition shadow&quot;&gt;
+                🔄 Reset Game
+            &lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;!-- Main Workspace --&gt;
+    &lt;main class=&quot;flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 items-start&quot;&gt;
+        
+        &lt;!-- Left &amp; Center: Questions Dashboard (Spans 2 columns) --&gt;
+        &lt;section class=&quot;lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full&quot;&gt;
+            &lt;h2 class=&quot;text-lg font-bold text-slate-700 mb-4 border-b pb-2 flex justify-between items-center&quot;&gt;
+                &lt;span&gt;Questions Dashboard (1–10)&lt;/span&gt;
+                &lt;span id=&quot;currentActiveSectionDisplay&quot; class=&quot;text-xs font-normal bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-200&quot;&gt;Grade 3 - St. Monica&lt;/span&gt;
+            &lt;/h2&gt;
             
-            <div id="questionCardContainer" class="bg-slate-50 border border-slate-200 rounded-xl p-4 hidden">
-                <div class="flex justify-between items-center mb-2">
-                    <span id="activeQuestionTitle" class="text-xs font-bold text-purple-600 uppercase">Question 1</span>
-                    <span id="assignedStudentBadge" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-medium hidden">Turn: 👤 <span id="currentResponder">None</span></span>
-                </div>
-                <p id="questionTextDisplay" class="text-sm font-semibold text-slate-800 mb-3">Question text...</p>
-                <div id="choicesContainer" class="space-y-2 mb-4"></div>
-                <div id="feedbackBanner" class="p-3 rounded-lg text-xs font-bold hidden mb-3"></div>
-            </div>
-            <div id="noQuestionPlaceholder" class="bg-slate-50 border border-dashed border-slate-300 rounded-xl p-6 text-center text-slate-400 text-xs">Select a question number above to start.</div>
-        </section>
+            &lt;div id=&quot;questionsGrid&quot; class=&quot;grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6&quot;&gt;
+                &lt;!-- Dynamically populated Q1-Q10 buttons --&gt;
+            &lt;/div&gt;
 
-        <section class="space-y-4">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col items-center">
-                <h3 class="text-xs font-bold text-slate-700 mb-2">🎡 Wheel of Names</h3>
-                <div class="wheel-container mb-3">
-                    <div class="pointer"></div>
-                    <canvas id="wheelCanvas" width="240" height="240"></canvas>
-                </div>
-                <div id="winnerAnnouncement" class="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-200 mb-3 hidden text-center"></div>
-                <button id="spinBtn" onclick="spinWheel()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 rounded-lg text-xs shadow">SPIN THE WHEEL!</button>
-            </div>
+            &lt;!-- Active Question Card --&gt;
+            &lt;div id=&quot;questionCardContainer&quot; class=&quot;bg-slate-50 border border-slate-200 rounded-xl p-6 hidden flex-1 flex-col justify-between&quot;&gt;
+                &lt;div&gt;
+                    &lt;div class=&quot;flex justify-between items-center mb-3&quot;&gt;
+                        &lt;span id=&quot;activeQuestionTitle&quot; class=&quot;text-sm font-bold text-indigo-600 uppercase tracking-wider&quot;&gt;Question 1&lt;/span&gt;
+                        &lt;span id=&quot;assignedStudentBadge&quot; class=&quot;text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-medium hidden&quot;&gt;Turn: 👤 &lt;span id=&quot;currentResponder&quot;&gt;None&lt;/span&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;p id=&quot;questionTextDisplay&quot; class=&quot;text-base font-semibold text-slate-800 mb-4&quot;&gt;Question text goes here...&lt;/p&gt;
+                    
+                    &lt;div id=&quot;choicesContainer&quot; class=&quot;space-y-2.5 mb-6&quot;&gt;
+                        &lt;!-- Dynamically populated clickable choices --&gt;
+                    &lt;/div&gt;
 
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-                <h3 class="text-xs font-bold text-slate-700 mb-2 flex justify-between"><span>🏆 Scoreboard</span><span id="totalClassPoints">0 pts</span></h3>
-                <div class="max-h-[150px] overflow-y-auto"><table class="w-full text-left text-xs"><tbody id="scoreboardBody"></tbody></table></div>
-            </div>
-        </section>
-    </main>
+                    &lt;!-- Feedback Alert Banner --&gt;
+                    &lt;div id=&quot;feedbackBanner&quot; class=&quot;p-4 rounded-xl text-sm font-bold hidden mb-4 transition-all&quot;&gt;&lt;/div&gt;
+                &lt;/div&gt;
 
-    <script>
-        const appData = {
-            "Grade 3 - St. Monica": { students: ["Student A1", "Student A2", "Student A3", "Student A4"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Student A1": 0, "Student A2": 0, "Student A3": 0, "Student A4": 0} },
-            "Grade 3 - St. Germaine": { students: ["Student B1", "Student B2", "Student B3", "Student B4"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Student B1": 0, "Student B2": 0, "Student B3": 0, "Student B4": 0} },
-            "Grade 3 - St. Agnes": { students: ["Student C1", "Student C2", "Student C3", "Student C4"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Student C1": 0, "Student C2": 0, "Student C3": 0, "Student C4": 0} },
-            "Grade 4 - St. Cecilia": { students: ["Alice", "Ben", "Chloe", "David"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Alice": 0, "Ben": 0, "Chloe": 0, "David": 0} },
-            "Grade 4 - St. Martha": { students: ["Grace", "Hannah", "Ian", "Jack"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Grace": 0, "Hannah": 0, "Ian": 0, "Jack": 0} },
-            "Grade 4 - St. Genevieve": { students: ["Mia", "Nathan", "Olivia", "Paul"], questions: Array.from({length: 10}, (_, i) => ({ id: i+1, text: `Sample Question ${i+1}?`, choices: ["Choice A", "Choice B", "Choice C", "Choice D"], correct: "A" })), scores: {"Mia": 0, "Nathan": 0, "Olivia": 0, "Paul": 0} }
+                &lt;div id=&quot;scoringPanel&quot; class=&quot;border-t pt-4 flex flex-wrap items-center justify-between gap-4 hidden&quot;&gt;
+                    &lt;p class=&quot;text-sm text-slate-600 font-medium&quot;&gt;Or manually evaluate &lt;span id=&quot;evaluatingStudentName&quot; class=&quot;font-bold text-slate-900&quot;&gt;&lt;/span&gt;&#x27;s answer:&lt;/p&gt;
+                    &lt;div class=&quot;flex space-x-3&quot;&gt;
+                        &lt;button onclick=&quot;gradeAnswer(true)&quot; class=&quot;bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded shadow text-sm transition&quot;&gt;
+                            ✅ Correct (+1 Pt, Remove Name)
+                        &lt;/button&gt;
+                        &lt;button onclick=&quot;gradeAnswer(false)&quot; class=&quot;bg-rose-600 hover:bg-rose-500 text-white font-medium px-4 py-2 rounded shadow text-sm transition&quot;&gt;
+                            ❌ Incorrect (0 Pt, Keep Name)
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div id=&quot;noQuestionPlaceholder&quot; class=&quot;bg-slate-50 border border-dashed border-slate-300 rounded-xl p-10 text-center text-slate-400 my-auto&quot;&gt;
+                Select a question number above to view choices and start answering.
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Right Column: Standings &amp; Floating Spin Wheel Launcher --&gt;
+        &lt;section class=&quot;space-y-6&quot;&gt;
+            &lt;!-- Scoreboard Card --&gt;
+            &lt;div class=&quot;bg-white rounded-xl shadow-sm border border-slate-200 p-6&quot;&gt;
+                &lt;h2 class=&quot;text-lg font-bold text-slate-700 mb-3 border-b pb-2 flex justify-between items-center&quot;&gt;
+                    &lt;span&gt;🏆 Scoreboard&lt;/span&gt;
+                    &lt;span id=&quot;totalClassPoints&quot; class=&quot;text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold&quot;&gt;Total: 0 pts&lt;/span&gt;
+                &lt;/h2&gt;
+                &lt;div class=&quot;overflow-y-auto max-h-[300px]&quot;&gt;
+                    &lt;table class=&quot;w-full text-left border-collapse&quot;&gt;
+                        &lt;thead&gt;
+                            &lt;tr class=&quot;text-xs uppercase text-slate-400 border-b&quot;&gt;
+                                &lt;th class=&quot;py-2&quot;&gt;Student Name&lt;/th&gt;
+                                &lt;th class=&quot;py-2 text-right&quot;&gt;Points&lt;/th&gt;
+                            &lt;/tr&gt;
+                        &lt;/thead&gt;
+                        &lt;tbody id=&quot;scoreboardBody&quot; class=&quot;divide-y divide-slate-100 text-sm&quot;&gt;
+                            &lt;!-- Dynamically filled students &amp; points --&gt;
+                        &lt;/tbody&gt;
+                    &lt;/table&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+
+    &lt;!-- Floating Spin the Wheel Modal / Bottom-Right Trigger --&gt;
+    &lt;div class=&quot;fixed bottom-6 right-6 z-40&quot;&gt;
+        &lt;button onclick=&quot;openWheelModal()&quot; class=&quot;bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold p-4 rounded-full shadow-2xl flex items-center gap-2 transform hover:scale-105 transition border-2 border-white&quot;&gt;
+            &lt;span class=&quot;text-2xl&quot;&gt;🎡&lt;/span&gt;
+            &lt;span class=&quot;pr-1 text-sm tracking-wide&quot;&gt;Spin Wheel&lt;/span&gt;
+        &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Spin Wheel Modal Overlay --&gt;
+    &lt;div id=&quot;wheelModal&quot; class=&quot;fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4&quot;&gt;
+        &lt;div class=&quot;bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative flex flex-col items-center&quot;&gt;
+            &lt;button onclick=&quot;closeWheelModal()&quot; class=&quot;absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl&quot;&gt;&amp;times;&lt;/button&gt;
+            &lt;h3 class=&quot;text-lg font-bold text-slate-800 mb-1&quot;&gt;🎡 Wheel of Names&lt;/h3&gt;
+            &lt;p class=&quot;text-xs text-slate-500 mb-6&quot;&gt;Spin to select who will answer the active question.&lt;/p&gt;
+
+            &lt;div class=&quot;wheel-container mb-6&quot;&gt;
+                &lt;div class=&quot;pointer&quot;&gt;&lt;/div&gt;
+                &lt;canvas id=&quot;wheelCanvas&quot; width=&quot;280&quot; height=&quot;280&quot;&gt;&lt;/canvas&gt;
+            &lt;/div&gt;
+
+            &lt;div id=&quot;selectedWinnerBanner&quot; class=&quot;text-center mb-6 h-10 flex items-center justify-center&quot;&gt;
+                &lt;span id=&quot;winnerAnnouncement&quot; class=&quot;text-sm font-semibold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full border border-indigo-200 hidden&quot;&gt;&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;button id=&quot;spinBtn&quot; onclick=&quot;spinWheel()&quot; class=&quot;w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl shadow transition text-base&quot;&gt;
+                SPIN THE WHEEL!
+            &lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Settings Modal --&gt;
+    &lt;div id=&quot;settingsModal&quot; class=&quot;fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4&quot;&gt;
+        &lt;div class=&quot;bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto relative flex flex-col&quot;&gt;
+            &lt;button onclick=&quot;closeSettings()&quot; class=&quot;absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-xl&quot;&gt;&amp;times;&lt;/button&gt;
+            &lt;h3 class=&quot;text-xl font-bold text-slate-800 mb-4 border-b pb-2&quot;&gt;⚙️ Game Settings &amp; Content&lt;/h3&gt;
+
+            &lt;div class=&quot;space-y-6&quot;&gt;
+                &lt;!-- Students Settings --&gt;
+                &lt;div&gt;
+                    &lt;h4 class=&quot;text-sm font-bold text-slate-700 mb-1&quot;&gt;Students List (Comma separated or one per line)&lt;/h4&gt;
+                    &lt;p class=&quot;text-xs text-slate-500 mb-2&quot;&gt;Configure students participating in the active section.&lt;/p&gt;
+                    &lt;textarea id=&quot;settingsStudentsInput&quot; rows=&quot;4&quot; class=&quot;w-full border border-slate-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono&quot;&gt;&lt;/textarea&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Questions Settings --&gt;
+                &lt;div&gt;
+                    &lt;h4 class=&quot;text-sm font-bold text-slate-700 mb-1&quot;&gt;Manage Questions &amp; Multiple Choices&lt;/h4&gt;
+                    &lt;p class=&quot;text-xs text-slate-500 mb-2&quot;&gt;Edit questions, choices A-D, and indicate the correct answer option letter (A, B, C, or D).&lt;/p&gt;
+                    &lt;div id=&quot;settingsQuestionsContainer&quot; class=&quot;space-y-4&quot;&gt;
+                        &lt;!-- Dynamically populated question forms --&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;mt-6 pt-4 border-t flex justify-end space-x-3&quot;&gt;
+                &lt;button onclick=&quot;closeSettings()&quot; class=&quot;bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-lg text-sm&quot;&gt;Cancel&lt;/button&gt;
+                &lt;button onclick=&quot;saveSettings()&quot; class=&quot;bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2 rounded-lg text-sm shadow&quot;&gt;Save Changes&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Script Application Logic --&gt;
+    &lt;script&gt;
+        // Default Data Store Structure per Section
+        const defaultAppData = {
+            &quot;Grade 3 - St. Monica&quot;: {
+                students: [&quot;Student A1&quot;, &quot;Student A2&quot;, &quot;Student A3&quot;, &quot;Student A4&quot;],
+                questions: Array.from({length: 10}, (_, i) =&gt; ({
+                    id: i + 1,
+                    text: `Araling Panlipunan - Sample Question ${i + 1} for St. Monica?`,
+                    choices: [&quot;Choice A Option&quot;, &quot;Choice B Option&quot;, &quot;Choice C Option&quot;, &quot;Choice D Option&quot;],
+                    correct: &quot;A&quot;
+                })),
+                scores: {}
+            },
+            &quot;Grade 3 - St. Germaine&quot;: {
+                students: [&quot;Student B1&quot;, &quot;Student B2&quot;, &quot;Student B3&quot;, &quot;Student B4&quot;],
+                questions: Array.from({length: 10}, (_, i) =&gt; ({
+                    id: i + 1,
+                    text: `Araling Panlipunan - Sample Question ${i + 1} for St. Germaine?`,
+                    choices: [&quot;Choice A Option&quot;, &quot;Choice B Option&quot;, &quot;Choice C Option&quot;, &quot;Choice D Option&quot;],
+                    correct: &quot;A&quot;
+                })),
+                scores: {}
+            },
+            &quot;Grade 3 - St. Agnes&quot;: {
+                students: [&quot;Student C1&quot;, &quot;Student C2&quot;, &quot;Student C3&quot;, &quot;Student C4&quot;],
+                questions: Array.from({length: 10}, (_, i) =&gt; ({
+                    id: i + 1,
+                    text: `Araling Panlipunan - Sample Question ${i + 1} for St. Agnes?`,
+                    choices: [&quot;Choice A Option&quot;, &quot;Choice B Option&quot;, &quot;Choice C Option&quot;, &quot;Choice D Option&quot;],
+                    correct: &quot;A&quot;
+                })),
+                scores: {}
+            },
+            &quot;Grade 4 - St. Cecilia&quot;: {
+                students: [&quot;Alice Smith&quot;, &quot;Ben Johnson&quot;, &quot;Chloe Davis&quot;, &quot;David Evans&quot;, &quot;Emma Wilson&quot;, &quot;Frank Thomas&quot;],
+                questions: Array.from({length: 10}, (_, i) =&gt; ({
+                    id: i + 1,
+                    text: `Araling Panlipunan 4 - Sample Question ${i + 1} for St. Cecilia?`,
+                    choices: [&quot;Choice A Option&quot;, &quot;Choice B Option&quot;, &quot;Choice C Option&quot;, &quot;Choice D Option&quot;],
+                    correct: &quot;A&quot;
+                })),
+                scores: {}
+            },
+            &quot;Grade 4 - St. Martha&quot;: {
+                students: [&quot;Grace Hall&quot;, &quot;Hannah Lewis&quot;, &quot;Ian Clark&quot;, &quot;Jack Walker&quot;, &quot;Karen Hall&quot;, &quot;Leo Young&quot;],
+                questions: Array.from({length: 10}, (_, i) =&gt; ({
+                    id: i + 1,
+                    text: `Araling Panlipunan 4 - Sample Question ${i + 1} for St. Martha?`,
+                    choices: [&quot;Option Alpha&quot;, &quot;Option Beta&quot;, &quot;Option Gamma&quot;, &quot;Option Delta&quot;],
+                    correct: &quot;B&quot;
+                })),
+                scores: {}
+            },
+            &quot;Grade 4 - St. Genevieve&quot;: {
+                students: [&quot;Mia King&quot;, &quot;Nathan Wright&quot;, &quot;Olivia Scott&quot;, &quot;Paul Green&quot;, &quot;Quinn Adams&quot;, &quot;Rachel Baker&quot;],
+                questions: Array.from({length: 10}, (_, i) =&gt; ({
+                    id: i + 1,
+                    text: `Araling Panlipunan 4 - Sample Question ${i + 1} for St. Genevieve?`,
+                    choices: [&quot;Answer One&quot;, &quot;Answer Two&quot;, &quot;Answer Three&quot;, &quot;Answer Four&quot;],
+                    correct: &quot;C&quot;
+                })),
+                scores: {}
+            }
         };
-        let currentSection = "Grade 3 - St. Monica", activeQuestionId = null, activeResponder = null, activeWheelPool = [...appData[currentSection].students], currentAngle = 0, isSpinning = false;
 
-        window.onload = () => { renderDashboard(); drawWheel(); };
-        function changeSection(sec) { currentSection = sec; document.getElementById("currentActiveSectionDisplay").innerText = sec; activeQuestionId = null; activeResponder = null; activeWheelPool = [...appData[currentSection].students]; renderDashboard(); drawWheel(); }
-        function resetGame() { Object.keys(appData).forEach(s => Object.keys(appData[s].scores).forEach(k => appData[s].scores[k] = 0)); activeResponder = null; activeWheelPool = [...appData[currentSection].students]; renderDashboard(); }
-        function renderDashboard() { renderQuestionsGrid(); renderScoreboard(); }
+        // Load saved appData from localStorage and ensure full schema integrity (handling old cached data)
+        let appData = defaultAppData;
+        const savedData = localStorage.getItem(&quot;teacherMaryAppData&quot;);
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
+                // Merge with default keys to ensure any newly added sections are present even if localStorage already existed
+                appData = { ...defaultAppData, ...parsed };
+                // Also ensure every section has students, questions, and scores properties
+                Object.keys(defaultAppData).forEach(sec =&gt; {
+                    if (!appData[sec]) {
+                        appData[sec] = defaultAppData[sec];
+                    } else {
+                        if (!appData[sec].students) appData[sec].students = defaultAppData[sec].students;
+                        if (!appData[sec].questions) appData[sec].questions = defaultAppData[sec].questions;
+                        if (!appData[sec].scores) appData[sec].scores = {};
+                    }
+                });
+            } catch (e) {
+                console.error(&quot;Error loading local storage data&quot;, e);
+                appData = defaultAppData;
+            }
+        }
+
+        function persistData() {
+            localStorage.setItem(&quot;teacherMaryAppData&quot;, JSON.stringify(appData));
+        }
+
+        let currentSection = &quot;Grade 3 - St. Monica&quot;;
+        let activeQuestionId = null;
+        let activeResponder = null;
+        let activeWheelPool = []; // Pool of remaining student names for spinning
+
+        // Initialization
+        const sectionSelect = document.getElementById(&quot;sectionSelect&quot;);
+        sectionSelect.addEventListener(&quot;change&quot;, (e) =&gt; {
+            currentSection = e.target.value;
+            document.getElementById(&quot;currentActiveSectionDisplay&quot;).innerText = currentSection;
+            activeQuestionId = null;
+            activeResponder = null;
+            resetWheelPool();
+            renderDashboard();
+        });
+
+        function resetWheelPool() {
+            if (!appData[currentSection] || !appData[currentSection].students) {
+                appData[currentSection] = defaultAppData[currentSection] || { students: [], questions: [], scores: {} };
+            }
+            activeWheelPool = [...appData[currentSection].students];
+        }
+
+        function initScores() {
+            if (!appData[currentSection]) {
+                appData[currentSection] = defaultAppData[currentSection] || { students: [], questions: [], scores: {} };
+            }
+            const students = appData[currentSection].students || [];
+            const scores = appData[currentSection].scores || {};
+            students.forEach(s =&gt; {
+                if (scores[s] === undefined) scores[s] = 0;
+            });
+            Object.keys(scores).forEach(s =&gt; {
+                if (!students.includes(s)) delete scores[s];
+            });
+            appData[currentSection].scores = scores;
+            persistData();
+        }
+
+        function renderDashboard() {
+            initScores();
+            if (activeWheelPool.length === 0 &amp;&amp; appData[currentSection].students.length &gt; 0) {
+                resetWheelPool();
+            }
+            renderQuestionsGrid();
+            renderScoreboard();
+            hideActiveQuestion();
+        }
+
         function renderQuestionsGrid() {
-            const grid = document.getElementById("questionsGrid"); grid.innerHTML = "";
-            appData[currentSection].questions.forEach(q => {
-                const btn = document.createElement("button");
-                btn.className = `p-2 rounded border font-bold text-xs ${activeQuestionId === q.id ? &apos;bg-purple-600 text-white border-purple-600&apos; : &apos;bg-white text-slate-700 border-slate-200 hover:bg-slate-50&apos;}`;
-                btn.innerText = `Q${q.id}`; btn.onclick = () => selectQuestion(q.id);
+            const grid = document.getElementById(&quot;questionsGrid&quot;);
+            grid.innerHTML = &quot;&quot;;
+            const questions = appData[currentSection].questions;
+
+            questions.forEach(q =&gt; {
+                const btn = document.createElement(&quot;button&quot;);
+                btn.className = `p-3 rounded-lg border font-bold text-sm transition flex flex-col items-center justify-center gap-1 ${
+                    activeQuestionId === q.id 
+                    ? &#x27;bg-indigo-600 text-white border-indigo-600 shadow&#x27; 
+                    : &#x27;bg-white hover:bg-slate-50 text-slate-700 border-slate-200&#x27;
+                }`;
+                btn.innerHTML = `&lt;span&gt;Q${q.id}&lt;/span&gt;`;
+                btn.onclick = () =&gt; selectQuestion(q.id);
                 grid.appendChild(btn);
             });
         }
+
         function selectQuestion(id) {
-            activeQuestionId = id; activeResponder = null; renderQuestionsGrid();
-            const q = appData[currentSection].questions.find(item => item.id === id);
-            document.getElementById("activeQuestionTitle").innerText = `Question ${q.id}`;
-            document.getElementById("questionTextDisplay").innerText = q.text;
-            document.getElementById("feedbackBanner").classList.add("hidden");
-            const container = document.getElementById("choicesContainer"); container.innerHTML = "";
-            q.choices.forEach((c, idx) => {
-                const letter = ["A", "B", "C", "D"][idx];
-                const b = document.createElement("button");
-                b.className = "w-full text-left p-2 rounded border border-slate-200 bg-white hover:bg-purple-50 text-xs font-medium flex items-center space-x-2";
-                b.innerHTML = `<span class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-[10px]">${letter}</span><span>${c}</span>`;
-                b.onclick = () => handleChoice(letter, q.correct);
-                container.appendChild(b);
-            });
-            document.getElementById("noQuestionPlaceholder").classList.add("hidden");
-            document.getElementById("questionCardContainer").classList.remove("hidden");
-            document.getElementById("assignedStudentBadge").classList.add("hidden");
+            activeQuestionId = id;
+            activeResponder = null;
+            renderQuestionsGrid();
+
+            const question = appData[currentSection].questions.find(q =&gt; q.id === id);
+            document.getElementById(&quot;activeQuestionTitle&quot;).innerText = `Question ${question.id}`;
+            document.getElementById(&quot;questionTextDisplay&quot;).innerText = question.text;
+            
+            // Hide and clear feedback banner
+            const feedbackBanner = document.getElementById(&quot;feedbackBanner&quot;);
+            feedbackBanner.classList.add(&quot;hidden&quot;);
+            feedbackBanner.innerText = &quot;&quot;;
+
+            renderChoices(question);
+
+            document.getElementById(&quot;noQuestionPlaceholder&quot;).classList.add(&quot;hidden&quot;);
+            document.getElementById(&quot;questionCardContainer&quot;).classList.remove(&quot;hidden&quot;);
+            document.getElementById(&quot;assignedStudentBadge&quot;).classList.add(&quot;hidden&quot;);
+            document.getElementById(&quot;scoringPanel&quot;).classList.add(&quot;hidden&quot;);
         }
-        function handleChoice(sel, cor) {
-            if (!activeResponder) { alert("Spin the wheel first!"); return; }
-            const banner = document.getElementById("feedbackBanner"); banner.classList.remove("hidden");
-            if (sel === cor) {
-                banner.className = "p-3 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 mb-3";
-                banner.innerText = `Tama! +1 point kay ${activeResponder}!`;
+
+        function renderChoices(question) {
+            const choicesContainer = document.getElementById(&quot;choicesContainer&quot;);
+            choicesContainer.innerHTML = &quot;&quot;;
+            const letters = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;];
+            
+            question.choices.forEach((choice, index) =&gt; {
+                const letter = letters[index];
+                const choiceBtn = document.createElement(&quot;button&quot;);
+                choiceBtn.className = &quot;w-full text-left p-3 rounded-lg border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-300 text-sm font-medium flex items-center space-x-3 transition shadow-sm group&quot;;
+                choiceBtn.innerHTML = `
+                    &lt;span class=&quot;w-7 h-7 rounded-full bg-slate-100 group-hover:bg-indigo-600 group-hover:text-white text-slate-600 flex items-center justify-center font-bold text-xs transition&quot;&gt;${letter}&lt;/span&gt;
+                    &lt;span class=&quot;text-slate-700 group-hover:text-indigo-900&quot;&gt;${choice}&lt;/span&gt;
+                `;
+                choiceBtn.onclick = () =&gt; handleChoiceClick(letter, question.correct);
+                choicesContainer.appendChild(choiceBtn);
+            });
+        }
+
+        function handleChoiceClick(selectedLetter, correctLetter) {
+            if (!activeResponder) {
+                alert(&quot;Please spin the wheel first to select a student before answering!&quot;);
+                return;
+            }
+
+            const feedbackBanner = document.getElementById(&quot;feedbackBanner&quot;);
+            feedbackBanner.classList.remove(&quot;hidden&quot;);
+
+            if (selectedLetter === correctLetter) {
+                feedbackBanner.className = &quot;p-4 rounded-xl text-sm font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 mb-4&quot;;
+                feedbackBanner.innerText = `Magaling! Tama ang iyong sagot! May 1 point ka sa recitation!`;
+                
+                // Award point and remove student from wheel pool, persist data
                 appData[currentSection].scores[activeResponder] += 1;
-                sendGameScore({
-                    game:"Wheel of Question",
-                    section:currentSection,
-                    student:activeResponder,
-                    points:1
-                });
+                sendGameScore({game:&quot;Wheel of Question&quot;,section:currentSection,student:activeResponder,points:1});
+                persistData();
+                activeWheelPool = activeWheelPool.filter(s =&gt; s !== activeResponder);
                 renderScoreboard();
-                activeWheelPool = activeWheelPool.filter(s => s !== activeResponder);
-                setTimeout(() => { activeResponder = null; document.getElementById("assignedStudentBadge").classList.add("hidden"); }, 800);
+
+                // Lock choices after answering correctly
+                disableChoicesButtons();
+
+                setTimeout(() =&gt; {
+                    activeResponder = null;
+                    document.getElementById(&quot;assignedStudentBadge&quot;).classList.add(&quot;hidden&quot;);
+                    document.getElementById(&quot;scoringPanel&quot;).classList.add(&quot;hidden&quot;);
+                }, 1000);
             } else {
-                banner.className = "p-3 rounded-lg text-xs font-bold bg-rose-100 text-rose-800 mb-3";
-                banner.innerText = `Mali ang sagot. Subukan ulit!`;
+                feedbackBanner.className = &quot;p-4 rounded-xl text-sm font-bold bg-rose-100 text-rose-800 border border-rose-300 mb-4&quot;;
+                feedbackBanner.innerText = `Mali ang sagot. Subukan ulit o pumili ng ibang sagot!`;
             }
         }
+
+        function disableChoicesButtons() {
+            const buttons = document.querySelectorAll(&quot;#choicesContainer button&quot;);
+            buttons.forEach(btn =&gt; {
+                btn.disabled = true;
+                btn.classList.add(&quot;opacity-60&quot;, &quot;cursor-not-allowed&quot;);
+                btn.classList.remove(&quot;hover:bg-indigo-50&quot;, &quot;hover:border-indigo-300&quot;);
+            });
+        }
+
+        function hideActiveQuestion() {
+            document.getElementById(&quot;questionCardContainer&quot;).classList.add(&quot;hidden&quot;);
+            document.getElementById(&quot;noQuestionPlaceholder&quot;).classList.remove(&quot;hidden&quot;);
+        }
+
         function renderScoreboard() {
-            const tbody = document.getElementById("scoreboardBody"); tbody.innerHTML = "";
-            let total = 0, scores = appData[currentSection].scores;
-            Object.keys(scores).sort((a,b) => scores[b] - scores[a]).forEach(s => {
-                total += scores[s];
-                const tr = document.createElement("tr");
-                tr.innerHTML = `<td class="py-1.5 font-medium text-slate-700">${s}</td><td class="py-1.5 text-right font-bold text-purple-600">${scores[s]}</td>`;
+            const tbody = document.getElementById(&quot;scoreboardBody&quot;);
+            tbody.innerHTML = &quot;&quot;;
+            const scores = appData[currentSection].scores;
+            let totalSum = 0;
+
+            const sortedStudents = Object.keys(scores).sort((a, b) =&gt; scores[b] - scores[a]);
+
+            sortedStudents.forEach(student =&gt; {
+                const pts = scores[student];
+                totalSum += pts;
+                const tr = document.createElement(&quot;tr&quot;);
+                tr.className = &quot;hover:bg-slate-50&quot;;
+                tr.innerHTML = `
+                    &lt;td class=&quot;py-2.5 font-medium text-slate-700&quot;&gt;${student}&lt;/td&gt;
+                    &lt;td class=&quot;py-2.5 text-right font-bold text-indigo-600&quot;&gt;${pts}&lt;/td&gt;
+                `;
                 tbody.appendChild(tr);
             });
-            document.getElementById("totalClassPoints").innerText = `${total} pts`;
+
+            document.getElementById(&quot;totalClassPoints&quot;).innerText = `Total: ${totalSum} pts`;
         }
+
+        // Spin Wheel Functionality
+        let wheelCanvas, wheelCtx;
+        let currentAngle = 0;
+        let isSpinning = false;
+
+        function openWheelModal() {
+            if (appData[currentSection].students.length === 0) {
+                alert(&quot;Please add students in Settings first.&quot;);
+                return;
+            }
+            if (activeWheelPool.length === 0) {
+                resetWheelPool();
+            }
+            document.getElementById(&quot;wheelModal&quot;).classList.remove(&quot;hidden&quot;);
+            document.getElementById(&quot;winnerAnnouncement&quot;).classList.add(&quot;hidden&quot;);
+            wheelCanvas = document.getElementById(&quot;wheelCanvas&quot;);
+            wheelCtx = wheelCanvas.getContext(&quot;2d&quot;);
+            
+            // Reset transition for clean opening
+            wheelCanvas.style.transition = &#x27;none&#x27;;
+            wheelCanvas.style.transform = `rotate(${currentAngle}deg)`;
+            drawWheel();
+        }
+
+        function closeWheelModal() {
+            if (isSpinning) return;
+            document.getElementById(&quot;wheelModal&quot;).classList.add(&quot;hidden&quot;);
+        }
+
         function drawWheel() {
-            const canvas = document.getElementById("wheelCanvas"), ctx = canvas.getContext("2d"), r = canvas.width / 2;
-            const pool = activeWheelPool.length > 0 ? activeWheelPool : appData[currentSection].students;
-            const arc = (2 * Math.PI) / pool.length;
-            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.save(); ctx.translate(r, r);
-            const cols = ["#7c3aed", "#9333ea", "#db2777", "#e11d48", "#ea580c", "#0891b2", "#059669"];
-            pool.forEach((name, i) => {
-                ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, r - 4, i * arc, (i + 1) * arc); ctx.closePath();
-                ctx.fillStyle = cols[i % cols.length]; ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
-                ctx.save(); ctx.rotate(i * arc + arc / 2); ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
-                ctx.fillText(name.length > 10 ? name.substring(0,8)+&apos;..&apos; : name, r - 12, 3); ctx.restore();
+            const width = wheelCanvas.width;
+            const height = wheelCanvas.height;
+            const radius = width / 2;
+            const pool = activeWheelPool.length &gt; 0 ? activeWheelPool : appData[currentSection].students;
+            const arcSize = (2 * Math.PI) / pool.length;
+
+            wheelCtx.clearRect(0, 0, width, height);
+            wheelCtx.save();
+            wheelCtx.translate(radius, radius);
+
+            const colors = [&quot;#6366f1&quot;, &quot;#8b5cf6&quot;, &quot;#ec4899&quot;, &quot;#f43f5e&quot;, &quot;#f97316&quot;, &quot;#06b6d4&quot;, &quot;#10b981&quot;];
+
+            pool.forEach((student, i) =&gt; {
+                const startAngle = i * arcSize;
+                const endAngle = (i + 1) * arcSize;
+
+                wheelCtx.beginPath();
+                wheelCtx.moveTo(0, 0);
+                wheelCtx.arc(0, 0, radius - 5, startAngle, endAngle);
+                wheelCtx.closePath();
+
+                wheelCtx.fillStyle = colors[i % colors.length];
+                wheelCtx.fill();
+                wheelCtx.strokeStyle = &quot;#ffffff&quot;;
+                wheelCtx.lineWidth = 2;
+                wheelCtx.stroke();
+
+                wheelCtx.save();
+                wheelCtx.rotate(startAngle + arcSize / 2);
+                wheelCtx.textAlign = &quot;right&quot;;
+                wheelCtx.fillStyle = &quot;#ffffff&quot;;
+                wheelCtx.font = &quot;bold 11px sans-serif&quot;;
+                wheelCtx.fillText(student.length &gt; 12 ? student.substring(0, 10) + &#x27;...&#x27; : student, radius - 15, 4);
+                wheelCtx.restore();
             });
-            ctx.restore();
+
+            wheelCtx.restore();
         }
+
         function spinWheel() {
             if (isSpinning) return;
-            const pool = activeWheelPool.length > 0 ? activeWheelPool : appData[currentSection].students;
-            if (pool.length === 0) { alert("Wala nang active students sa wheel!"); return; }
-            isSpinning = true;
-            const randDeg = Math.floor(Math.random() * 360) + 1440;
-            currentAngle += randDeg;
-            const canvas = document.getElementById("wheelCanvas");
-            canvas.style.transition = "transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)";
-            canvas.style.transform = `rotate(${currentAngle}deg)`;
-            setTimeout(() => {
-                isSpinning = false;
-                // Correct pointer alignment calculation
-                const normalizedAngle = ((currentAngle % 360) + 360) % 360;
-                const arcSize = 360 / pool.length;
+            const pool = activeWheelPool.length &gt; 0 ? activeWheelPool : appData[currentSection].students;
+            if (pool.length === 0) {
+                alert(&quot;No active students left in the wheel pool!&quot;);
+                return;
+            }
 
-                // Pointer is at the top (270 degrees), adjust wheel rotation
-                const pointerAngle = (360 - normalizedAngle + 270) % 360;
-                const winningIndex = Math.floor(pointerAngle / arcSize) % pool.length;
-                activeResponder = pool[winningIndex];
-                const banner = document.getElementById("winnerAnnouncement");
-                banner.classList.remove("hidden"); banner.innerText = `Turn: ${activeResponder}!`;
-                document.getElementById("assignedStudentBadge").classList.remove("hidden");
-                document.getElementById("currentResponder").innerText = activeResponder;
+            isSpinning = true;
+            document.getElementById(&quot;spinBtn&quot;).disabled = true;
+            document.getElementById(&quot;winnerAnnouncement&quot;).classList.add(&quot;hidden&quot;);
+
+            const extraRotations = 5 + Math.floor(Math.random() * 5); // 5 to 10 full spins
+            const arcSizeDeg = 360 / pool.length;
+            const winningIndex = Math.floor(Math.random() * pool.length);
+            
+            // Re-enable smooth transition for the spin action
+            wheelCanvas.style.transition = &#x27;transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)&#x27;;
+            
+            // Calculate slice center angle in degrees
+            const sliceCenterAngle = (winningIndex * arcSizeDeg) + (arcSizeDeg / 2);
+            
+            // Pointer is fixed at top (270 degrees in canvas coordinates).
+            const targetRotationOffset = (270 - sliceCenterAngle + 360) % 360;
+
+            const normalizedCurrent = ((currentAngle % 360) + 360) % 360;
+            let degreeDiff = targetRotationOffset - normalizedCurrent;
+            if (degreeDiff &lt;= 0) {
+                degreeDiff += 360;
+            }
+
+            const targetAngleDeg = currentAngle + (extraRotations * 360) + degreeDiff;
+            
+            wheelCanvas.style.transform = `rotate(${targetAngleDeg}deg)`;
+
+            setTimeout(() =&gt; {
+                isSpinning = false;
+                document.getElementById(&quot;spinBtn&quot;).disabled = false;
+                currentAngle = targetAngleDeg;
+
+                const winner = pool[winningIndex];
+                assignResponder(winner);
+                
+                const announcement = document.getElementById(&quot;winnerAnnouncement&quot;);
+                announcement.innerText = `🎉 Selected Student: ${winner}`;
+                announcement.classList.remove(&quot;hidden&quot;);
+
+                setTimeout(() =&gt; {
+                    closeWheelModal();
+                }, 1500);
             }, 4000);
         }
-    </script>
-</body>
-</html>' style="width: 100%; height: 70vh; border: none; border-radius: 8px;"></iframe>
-                </div>
-            </section>
 
-            <div class="settings-card">          <h2>📂 GitHub Resource Manager</h2>          <p style="color: var(--text-muted); font-size:0.9rem;">             Your teaching materials are managed through GitHub.             Upload your images directly to the repository and update             the resources.json file.         </p>      </div>       <div class="settings-card">          <h2>📝 How to Update Images</h2>          <ol style="line-height:2; color:var(--text-main);">              <li>                 Open your GitHub repository.             </li>              <li>                 Upload your lesson images inside:                 <br>                 <strong>                 images → Grade → Subject → Week                 </strong>             </li>              <li>                 Update the                  <strong>resources.json</strong>                 file.             </li>              <li>                 Click:                 <strong>Commit Changes</strong>             </li>              <li>                 Refresh your TEACHER MARY HQ website.             </li>          </ol>      </div>       <div class="settings-card">          <h2>📁 Recommended File Format</h2>          <pre style="         background:#f3f4f6;         padding:15px;         border-radius:8px;         overflow:auto;         ">  images │ ├── Grade3 │    └── Computer │          ├── Week1.png │          ├── Week2.png │          └── Week3.png  resources.json          </pre>      </div>       <div class="settings-card">          <h2>✅ System Status</h2>          <p style="color:#10b981;font-weight:600;">             ☁️ Connected to GitHub Resource System         </p>          <p style="color:var(--text-muted);">             Updates made in GitHub will automatically appear             after the website refreshes.         </p>      </div>  </section>s-section" class="section">
+        function assignResponder(studentName) {
+            activeResponder = studentName;
+            if (activeQuestionId !== null) {
+                document.getElementById(&quot;assignedStudentBadge&quot;).classList.remove(&quot;hidden&quot;);
+                document.getElementById(&quot;currentResponder&quot;).innerText = studentName;
+                document.getElementById(&quot;evaluatingStudentName&quot;).innerText = studentName;
+                document.getElementById(&quot;scoringPanel&quot;).classList.remove(&quot;hidden&quot;);
+            }
+        }
+
+        function gradeAnswer(isCorrect) {
+            if (!activeResponder) return;
+
+            if (isCorrect) {
+                appData[currentSection].scores[activeResponder] += 1;
+                sendGameScore({game:&quot;Wheel of Question&quot;,section:currentSection,student:activeResponder,points:1});
+                persistData();
+                activeWheelPool = activeWheelPool.filter(s =&gt; s !== activeResponder);
+                alert(`Magaling! Tama ang iyong sagot! May 1 point ka sa recitation!`);
+            } else {
+                alert(`Incorrect. 0 points. ${activeResponder}&#x27;s name remains in the wheel.`);
+            }
+
+            renderScoreboard();
+            
+            activeResponder = null;
+            document.getElementById(&quot;assignedStudentBadge&quot;).classList.add(&quot;hidden&quot;);
+            document.getElementById(&quot;scoringPanel&quot;).classList.add(&quot;hidden&quot;);
+        }
+
+        // Settings Management
+        function openSettings() {
+            document.getElementById(&quot;settingsModal&quot;).classList.remove(&quot;hidden&quot;);
+            document.getElementById(&quot;settingsStudentsInput&quot;).value = appData[currentSection].students.join(&quot;, &quot;);
+            
+            const qContainer = document.getElementById(&quot;settingsQuestionsContainer&quot;);
+            qContainer.innerHTML = &quot;&quot;;
+
+            appData[currentSection].questions.forEach(q =&gt; {
+                const div = document.createElement(&quot;div&quot;);
+                div.className = &quot;p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3&quot;;
+                div.innerHTML = `
+                    &lt;div class=&quot;flex justify-between items-center&quot;&gt;
+                        &lt;span class=&quot;text-xs font-bold text-indigo-600 uppercase&quot;&gt;Question ${q.id}&lt;/span&gt;
+                        &lt;div class=&quot;flex items-center space-x-2&quot;&gt;
+                            &lt;label class=&quot;text-xs font-medium text-slate-600&quot;&gt;Correct Answer:&lt;/label&gt;
+                            &lt;select id=&quot;setting-correct-${q.id}&quot; class=&quot;border border-slate-300 rounded px-2 py-0.5 text-xs font-bold bg-white&quot;&gt;
+                                &lt;option value=&quot;A&quot; ${q.correct === &#x27;A&#x27; ? &#x27;selected&#x27; : &#x27;&#x27;}&gt;A&lt;/option&gt;
+                                &lt;option value=&quot;B&quot; ${q.correct === &#x27;B&#x27; ? &#x27;selected&#x27; : &#x27;&#x27;}&gt;B&lt;/option&gt;
+                                &lt;option value=&quot;C&quot; ${q.correct === &#x27;C&#x27; ? &#x27;selected&#x27; : &#x27;&#x27;}&gt;C&lt;/option&gt;
+                                &lt;option value=&quot;D&quot; ${q.correct === &#x27;D&#x27; ? &#x27;selected&#x27; : &#x27;&#x27;}&gt;D&lt;/option&gt;
+                            &lt;/select&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;input type=&quot;text&quot; id=&quot;setting-text-${q.id}&quot; value=&quot;${q.text}&quot; class=&quot;w-full border border-slate-300 rounded p-2 text-sm bg-white&quot; placeholder=&quot;Question text&quot;&gt;
+                    &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-2 gap-2&quot;&gt;
+                        &lt;input type=&quot;text&quot; id=&quot;setting-q${q.id}-c0&quot; value=&quot;${q.choices[0]}&quot; class=&quot;border border-slate-300 rounded p-1.5 text-xs bg-white&quot; placeholder=&quot;Choice A&quot;&gt;
+                        &lt;input type=&quot;text&quot; id=&quot;setting-q${q.id}-c1&quot; value=&quot;${q.choices[1]}&quot; class=&quot;border border-slate-300 rounded p-1.5 text-xs bg-white&quot; placeholder=&quot;Choice B&quot;&gt;
+                        &lt;input type=&quot;text&quot; id=&quot;setting-q${q.id}-c2&quot; value=&quot;${q.choices[2]}&quot; class=&quot;border border-slate-300 rounded p-1.5 text-xs bg-white&quot; placeholder=&quot;Choice C&quot;&gt;
+                        &lt;input type=&quot;text&quot; id=&quot;setting-q${q.id}-c3&quot; value=&quot;${q.choices[3]}&quot; class=&quot;border border-slate-300 rounded p-1.5 text-xs bg-white&quot; placeholder=&quot;Choice D&quot;&gt;
+                    &lt;/div&gt;
+                `;
+                qContainer.appendChild(div);
+            });
+        }
+
+        function closeSettings() {
+            document.getElementById(&quot;settingsModal&quot;).classList.add(&quot;hidden&quot;);
+        }
+
+        function saveSettings() {
+            const rawStudents = document.getElementById(&quot;settingsStudentsInput&quot;).value;
+            const parsedStudents = rawStudents.split(/[\n,]+/).map(s =&gt; s.trim()).filter(s =&gt; s.length &gt; 0);
+            
+            if (parsedStudents.length === 0) {
+                alert(&quot;Please provide at least one student name. Please try again.&quot;);
+                return;
+            }
+
+            appData[currentSection].students = parsedStudents;
+            persistData();
+            resetWheelPool();
+
+            for (let i = 1; i &lt;= 10; i++) {
+                const textEl = document.getElementById(`setting-text-${i}`);
+                const c0El = document.getElementById(`setting-q${i}-c0`);
+                const c1El = document.getElementById(`setting-q${i}-c1`);
+                const c2El = document.getElementById(`setting-q${i}-c2`);
+                const c3El = document.getElementById(`setting-q${i}-c3`);
+                const correctEl = document.getElementById(`setting-correct-${i}`);
+
+                if (textEl &amp;&amp; c0El &amp;&amp; c1El &amp;&amp; c2El &amp;&amp; c3El &amp;&amp; correctEl) {
+                    const qObj = appData[currentSection].questions.find(q =&gt; q.id === i);
+                    if (qObj) {
+                        qObj.text = textEl.value;
+                        qObj.choices = [c0El.value, c1El.value, c2El.value, c3El.value];
+                        qObj.correct = correctEl.value;
+                    }
+                }
+            }
+
+            persistData();
+            closeSettings();
+            renderDashboard();
+            if (activeQuestionId !== null) {
+                selectQuestion(activeQuestionId);
+            }
+        }
+
+        function resetGame() {
+            if (confirm(`Are you sure you want to reset scores and wheel pool for ${currentSection}?`)) {
+                appData[currentSection].scores = {};
+                persistData();
+                activeResponder = null;
+                activeQuestionId = null;
+                resetWheelPool();
+                renderDashboard();
+            }
+        }
+
+        // Initial Page Render
+        renderDashboard();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;' style="width:100%;height:70vh;border:none;border-radius:8px;"></iframe>
+</div>
+</section>
+
+<div class="settings-card">          <h2>📂 GitHub Resource Manager</h2>          <p style="color: var(--text-muted); font-size:0.9rem;">             Your teaching materials are managed through GitHub.             Upload your images directly to the repository and update             the resources.json file.         </p>      </div>       <div class="settings-card">          <h2>📝 How to Update Images</h2>          <ol style="line-height:2; color:var(--text-main);">              <li>                 Open your GitHub repository.             </li>              <li>                 Upload your lesson images inside:                 <br>                 <strong>                 images → Grade → Subject → Week                 </strong>             </li>              <li>                 Update the                  <strong>resources.json</strong>                 file.             </li>              <li>                 Click:                 <strong>Commit Changes</strong>             </li>              <li>                 Refresh your TEACHER MARY HQ website.             </li>          </ol>      </div>       <div class="settings-card">          <h2>📁 Recommended File Format</h2>          <pre style="         background:#f3f4f6;         padding:15px;         border-radius:8px;         overflow:auto;         ">  images │ ├── Grade3 │    └── Computer │          ├── Week1.png │          ├── Week2.png │          └── Week3.png  resources.json          </pre>      </div>       <div class="settings-card">          <h2>✅ System Status</h2>          <p style="color:#10b981;font-weight:600;">             ☁️ Connected to GitHub Resource System         </p>          <p style="color:var(--text-muted);">             Updates made in GitHub will automatically appear             after the website refreshes.         </p>      </div>  </section>s-section" class="section">
                 <div class="settings-card">
                     <h2 id="form-heading-title">Organized Resource Upload</h2>
                     <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Assign files or formatted 1–20 questions to specific grades, subjects, terms, and weeks.</p>
