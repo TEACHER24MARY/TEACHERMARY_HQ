@@ -1297,7 +1297,7 @@
                 </div>
             </section>
 
-            <div class="settings-card">          <h2>📂 GitHub Resource Manager</h2>          <p style="color: var(--text-muted); font-size:0.9rem;">             Your teaching materials are managed through GitHub.             Upload your images directly to the repository and update             the resources.json file.         </p>      </div>       <div class="settings-card">          <h2>📝 How to Update Images</h2>          <ol style="line-height:2; color:var(--text-main);">              <li>                 Open your GitHub repository.             </li>              <li>                 Upload your lesson images inside:                 <br>                 <strong>                 images → Grade → Subject → Week                 </strong>             </li>              <li>                 Update the                  <strong>resources.json</strong>                 file.             </li>              <li>                 Click:                 <strong>Commit Changes</strong>             </li>              <li>                 Refresh your TEACHER MARY HQ website.             </li>          </ol>      </div>       <div class="settings-card">          <h2>📁 Recommended File Format</h2>          <pre style="         background:#f3f4f6;         padding:15px;         border-radius:8px;         overflow:auto;         ">  images │ ├── Grade3 │    └── Computer │          ├── Week1.png │          ├── Week2.png │          └── Week3.png  resources.json          </pre>      </div>       <div class="settings-card">          <h2>✅ System Status</h2>          <p style="color:#10b981;font-weight:600;">             ☁️ Connected to GitHub Resource System         </p>          <p style="color:var(--text-muted);">             Updates made in GitHub will automatically appear             after the website refreshes.         </p>      </div>  </section>s-section" class="section">
+            <section id="settings-section" class="section">
                 <div class="settings-card">
                     <h2 id="form-heading-title">Organized Resource Upload</h2>
                     <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Assign files or formatted 1–20 questions to specific grades, subjects, terms, and weeks.</p>
@@ -1413,35 +1413,19 @@
         let touchStartX = 0;
         let touchEndX = 0;
 
-let githubResources = [];
+        let githubResources = [];
 
-async function loadGitHubResources(){
+        async function loadGitHubResources(){
+            try{
+                const response = await fetch("resources.json");
+                githubResources = await response.json();
+                console.log("GitHub Resources Loaded:", githubResources);
+            } catch(error){
+                console.error("Cannot load resources.json", error);
+            }
+        }
 
-    try{
-
-        const response = await fetch("resources.json");
-
-        githubResources = await response.json();
-
-        console.log(
-            "GitHub Resources Loaded:",
-            githubResources
-        );
-        console.log("First Resource:", githubResources[0]);
-
-    } catch(error){
-
-        console.error(
-            "Cannot load resources.json",
-            error
-        );
-
-    }
-
-}
-
-loadGitHubResources();
-
+        loadGitHubResources();
 
         window.addEventListener('DOMContentLoaded', () => {
             const builderList = document.getElementById('questions-builder-list');
@@ -1555,162 +1539,123 @@ loadGitHubResources();
             if (lightbox) lightbox.classList.remove('open');
         }
 
-       async function openContent(type) {
+        async function openContent(type) {
+            const grade = document.getElementById('grade-select').value.toUpperCase();
+            const subject = document.getElementById('subject-select').value.toUpperCase().replaceAll(" ", "");
+            const term = document.getElementById('term-select').value.toUpperCase();
+            const week = document.getElementById('week-select').value.toUpperCase();
 
-    const grade = document.getElementById('grade-select').value.toUpperCase();
-    const subject = document.getElementById('subject-select').value.toUpperCase().replaceAll(" ", "");
-    const term = document.getElementById('term-select').value.toUpperCase();
-    const week = document.getElementById('week-select').value.toUpperCase();
+            document.getElementById('modal-heading-title').innerText = `${subject} - ${type}`;
+            const container = document.getElementById('modal-dynamic-container');
 
-    document.getElementById('modal-heading-title').innerText =
-    `${subject} - ${type}`;
+            const resource = githubResources.find(item =>
+                item.GRADE === grade &&
+                item.SUBJECT === subject &&
+                item.TERM === term &&
+                item.WEEK === week &&
+                item.CATEGORY === type.toUpperCase()
+            );
 
-    const container = document.getElementById('modal-dynamic-container');
+            if(resource && resource.SLIDES && resource.SLIDES.length > 0){
+                currentSlideIndex = 0;
+                container.innerHTML = `<img src="${resource.SLIDES[currentSlideIndex]}" style="max-width:100%;max-height:70vh;object-fit:contain;margin:auto;">`;
+            } else {
+                container.innerHTML = `<p style="text-align:center;padding:40px;color:#6b7280;">No content available.</p>`;
+            }
+            document.getElementById('resource-modal').classList.add('open');
+        }
 
-    const resource = githubResources.find(item =>
-        item.GRADE === grade &&
-        item.SUBJECT === subject &&
-        item.TERM === term &&
-        item.WEEK === week &&
-        item.CATEGORY === type.toUpperCase()
-    );
+        async function openPptWithSeatworkIntegration() {
+            if (!githubResources || githubResources.length === 0) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
 
-    if(resource && resource.SLIDES && resource.SLIDES.length > 0){
+            const grade = document.getElementById('grade-select')?.value || '';
+            const subject = document.getElementById('subject-select')?.value || '';
+            const term = document.getElementById('term-select')?.value || '';
+            const week = document.getElementById('week-select')?.value || '';
 
-        currentSlideIndex = 0;
+            document.getElementById('modal-heading-title').innerText = `${subject} - PowerPoint Presentation & Seatwork`;
+            document.getElementById('modal-subtext').innerText = `${grade} | ${subject} | ${term} | ${week}`;
 
-        container.innerHTML = `
-        <img 
-        src="${resource.SLIDES[currentSlideIndex]}"
-        style="
-        max-width:100%;
-        max-height:70vh;
-        object-fit:contain;
-        margin:auto;
-        ">
-        `;
+            const container = document.getElementById('modal-dynamic-container');
+            const githubGrade = grade.toUpperCase();
+            const githubSubject = subject.toUpperCase().replaceAll(" ", "");
+            const githubTerm = term.toUpperCase();
+            const githubWeek = week.toUpperCase();
 
-    } else {
+            const resource = githubResources.find(item =>
+                item.GRADE?.trim().toUpperCase() === githubGrade.trim().toUpperCase() &&
+                item.SUBJECT?.trim().replaceAll(" ","").toUpperCase() === githubSubject.trim().replaceAll(" ","").toUpperCase() &&
+                item.TERM?.trim().toUpperCase() === githubTerm.trim().toUpperCase() &&
+                item.WEEK?.trim().toUpperCase() === githubWeek.trim().toUpperCase() &&
+                item.CATEGORY?.trim().toUpperCase() === "POWERPOINT"
+            );
 
-        container.innerHTML = `
-        <p style="text-align:center;padding:40px;color:#6b7280;">
-        No PowerPoint slides available.
-        </p>
-        `;
+            let slideList = [];
+            if (resource && resource.SLIDES) {
+                slideList = resource.SLIDES.map(path => ({
+                    dataUrl: path,
+                    name: path.split("/").pop()
+                }));
+            }
 
-    }
+            currentSlideIndex = 0;
 
-    document.getElementById('resource-modal').classList.add('open');
-
-}
-
-async function openPptWithSeatworkIntegration() {
-
-    // Wait for GitHub resources to finish loading
-    if (!githubResources || githubResources.length === 0) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-
-    const grade = document.getElementById('grade-select')?.value || '';
-    const subject = document.getElementById('subject-select')?.value || '';
-    const term = document.getElementById('term-select')?.value || '';
-    const week = document.getElementById('week-select')?.value || '';
-
-    document.getElementById('modal-heading-title').innerText =
-        `${subject} - PowerPoint Presentation & Seatwork`;
-
-    document.getElementById('modal-subtext').innerText =
-        `${grade} | ${subject} | ${term} | ${week}`;
-
-    const container = document.getElementById('modal-dynamic-container');
-
-    const githubGrade = grade.toUpperCase().replace(" ", " ");
-    const githubSubject = subject.toUpperCase().replaceAll(" ", "");
-    const githubTerm = term.toUpperCase();
-    const githubWeek = week.toUpperCase();
-
-    const resource = githubResources.find(item =>
-        item.GRADE?.trim().toUpperCase() === githubGrade.trim().toUpperCase() &&
-        item.SUBJECT?.trim().replaceAll(" ","").toUpperCase() === githubSubject.trim().replaceAll(" ","").toUpperCase() &&
-        item.TERM?.trim().toUpperCase() === githubTerm.trim().toUpperCase() &&
-        item.WEEK?.trim().toUpperCase() === githubWeek.trim().toUpperCase() &&
-        item.CATEGORY?.trim().toUpperCase() === "POWERPOINT"
-    );
-
-    let slideList = [];
-
-    if (resource && resource.SLIDES) {
-        slideList = resource.SLIDES.map(path => ({
-            dataUrl: path,
-            name: path.split("/").pop()
-        }));
-    }
-
-    currentSlideIndex = 0;
-
-    container.innerHTML = `
-        <div class="ppt-seatwork-container" id="ppt-seatwork-layout">
-            <div class="ppt-pane">
-                <div class="pane-header">
-                    <span>📊 PowerPoint Presentation Slides</span>
-                </div>
-                <div class="ppt-view-area">
-                    ${
-                    slideList.length > 0 ? `
-                    <div class="ppt-carousel-wrapper" id="ppt-carousel-box">
-                        ${slideList.map((slide, idx) => `
-                        <div class="ppt-carousel-slide ${idx === 0 ? 'active' : ''}">
-                            <button class="img-fullscreen-btn"
-                            onclick="openImageFullscreen('${slide.dataUrl}')">
-                            ⛶ Full Screen Image
-                            </button>
-                            <img src="${slide.dataUrl}"
-                            onclick="openImageFullscreen('${slide.dataUrl}')">
+            container.innerHTML = `
+                <div class="ppt-seatwork-container" id="ppt-seatwork-layout">
+                    <div class="ppt-pane">
+                        <div class="pane-header">
+                            <span>📊 PowerPoint Presentation Slides</span>
                         </div>
-                        `).join("")}
+                        <div class="ppt-view-area">
+                            ${
+                            slideList.length > 0 ? `
+                            <div class="ppt-carousel-wrapper" id="ppt-carousel-box">
+                                ${slideList.map((slide, idx) => `
+                                <div class="ppt-carousel-slide ${idx === 0 ? 'active' : ''}">
+                                    <button class="img-fullscreen-btn" onclick="openImageFullscreen('${slide.dataUrl}')">
+                                    ⛶ Full Screen Image
+                                    </button>
+                                    <img src="${slide.dataUrl}" onclick="openImageFullscreen('${slide.dataUrl}')">
+                                </div>
+                                `).join("")}
 
-                        ${slideList.length > 1 ? `
-                        <button class="carousel-btn carousel-prev"
-                        onclick="changeSlide(-1)">&#10094;</button>
-                        <button class="carousel-btn carousel-next"
-                        onclick="changeSlide(1)">&#10095;</button>
-                        ` : ""}
+                                ${slideList.length > 1 ? `
+                                <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)">&#10094;</button>
+                                <button class="carousel-btn carousel-next" onclick="changeSlide(1)">&#10095;</button>
+                                ` : ""}
 
-                        <div class="carousel-indicators" id="carousel-indicator-text">
-                        Slide 1 of ${slideList.length}
+                                <div class="carousel-indicators" id="carousel-indicator-text">
+                                Slide 1 of ${slideList.length}
+                                </div>
+                            </div>
+                            ` :
+                            `<span style="color:#6b7280;text-align:center;padding:20px;">
+                            No PowerPoint slides found in GitHub resources.json
+                            </span>`
+                            }
+
+                            <button id="ppt-seatwork-toggle-btn" class="ppt-seatwork-icon-btn" onclick="toggleSeatworkPane()">
+                            📝 Seatwork
+                            </button>
                         </div>
                     </div>
-                    ` :
-                    `<span style="color:#6b7280;text-align:center;padding:20px;">
-                    No PowerPoint slides found in GitHub resources.json
-                    </span>`
-                    }
 
-                    <button id="ppt-seatwork-toggle-btn"
-                    class="ppt-seatwork-icon-btn"
-                    onclick="toggleSeatworkPane()">
-                    📝 Seatwork
-                    </button>
+                    <div class="seatwork-pane" id="right-seatwork-pane">
+                        <div class="pane-header">
+                            <span>📝 Seatwork Questions</span>
+                        </div>
+                        <div class="seatwork-interactive-list" id="seatwork-interactive-list-body">
+                        </div>
+                    </div>
                 </div>
-            </div>
+            `;
 
-            <div class="seatwork-pane" id="right-seatwork-pane">
-                <div class="pane-header">
-                    <span>📝 Seatwork Questions</span>
-                </div>
-                <div class="seatwork-interactive-list"
-                id="seatwork-interactive-list-body">
-                </div>
-            </div>
-        </div>
-    `;
-
-    window.slideTotalCount = slideList.length;
-
-    document.getElementById('resource-modal')?.classList.add('open');
-
-    setupTouchSwipeListeners();
-}
+            window.slideTotalCount = slideList.length;
+            document.getElementById('resource-modal')?.classList.add('open');
+            setupTouchSwipeListeners();
+        }
 
         function setupTouchSwipeListeners() {
             const carouselBox = document.getElementById('ppt-carousel-box');
@@ -1749,64 +1694,6 @@ async function openPptWithSeatworkIntegration() {
                 toggleButton.classList.add('active');
                 toggleButton.innerHTML = "❌ Close Seatwork";
             }
-        }
-
-        function toggleSeatworkDropdown(event) {
-            event.stopPropagation();
-            document.getElementById('seatwork-dropdown-list')?.classList.toggle('show');
-        }
-
-        function closeDropdownOutside(event) {
-            if (!event.target.closest('.seatwork-dropdown-wrapper')) {
-                document.getElementById('seatwork-dropdown-list')?.classList.remove('show');
-            }
-        }
-
-        function selectSeatworkRange(range, labelText) {
-            currentSeatworkRange = range;
-            const labelElem = document.getElementById('selected-seatwork-label');
-            if (labelElem) labelElem.innerText = labelText;
-            document.getElementById('seatwork-dropdown-list')?.classList.remove('show');
-
-            let uploadedFiles = JSON.parse(localStorage.getItem('teacherMaryHQ_files') || '[]');
-            const grade = document.getElementById('grade-select')?.value || '';
-            const subject = document.getElementById('subject-select')?.value || '';
-            const term = document.getElementById('term-select')?.value || '';
-            const week = document.getElementById('week-select')?.value || '';
-            const seatworkMatch = uploadedFiles.find(f => f && f.category === 'Seatwork' && f.grade === grade && f.subject === subject && f.term === term && f.week === week);
-            populateSeatworkList(seatworkMatch);
-        }
-
-        function updateDropdownLabel() {
-            const labelElem = document.getElementById('selected-seatwork-label');
-            if (!labelElem) return;
-            let labelText = "Seatwork 1";
-            if (currentSeatworkRange === '1-5') labelText = "Seatwork 1-5";
-            else if (currentSeatworkRange === '1-10') labelText = "Seatwork 1-10";
-            else if (currentSeatworkRange === '1-20') labelText = "Seatwork 1-20 (All)";
-            labelElem.innerText = labelText;
-        }
-
-        function populateSeatworkList(seatworkMatch) {
-            const listBody = document.getElementById('seatwork-interactive-list-body');
-            if (!listBody) return;
-            if (!seatworkMatch || !seatworkMatch.questions || seatworkMatch.questions.length === 0) {
-                listBody.innerHTML = '<span style="color: var(--text-muted); text-align: center; padding: 40px;">No seatwork questions uploaded for this week.</span>';
-                return;
-            }
-            let html = '', minNum = 1, maxNum = 1;
-            if (currentSeatworkRange.includes('-')) {
-                const parts = currentSeatworkRange.split('-');
-                minNum = parseInt(parts[0]); maxNum = parseInt(parts[1]);
-            } else { minNum = parseInt(currentSeatworkRange); maxNum = minNum; }
-            let count = 0;
-            seatworkMatch.questions.forEach(q => {
-                if (q && q.num >= minNum && q.num <= maxNum && q.text && q.text.trim() !== "") {
-                    count++;
-                    html += `<div class="seatwork-item"><span class="seatwork-num">${q.num}.</span><span class="seatwork-text">${q.text}</span></div>`;
-                }
-            });
-            listBody.innerHTML = count === 0 ? '<span style="color: var(--text-muted); text-align: center; padding: 30px;">No questions found.</span>' : html;
         }
 
         function closeModal(modalId) {
