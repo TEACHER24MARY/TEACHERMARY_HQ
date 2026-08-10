@@ -1,1 +1,100 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>TEACHER MARY HQ</title><style>body{font-family:Segoe UI;margin:0;background:#f3f4f6;display:flex}aside{width:240px;background:white;padding:20px;height:100vh}.brand{font-size:22px;font-weight:bold;color:#7c3aed}button{padding:10px;margin:5px;border:0;border-radius:8px;cursor:pointer}main{padding:25px;flex:1}.card{background:white;padding:20px;border-radius:15px}img{max-width:100%;max-height:70vh}</style></head><body><aside><div class="brand">TEACHER MARY HQ</div><button onclick="show('home')">🏠 Dashboard</button><button onclick="show('treasure')">🏴‍☠️ Treasure Word Hunt</button><button onclick="show('wheel')">🎡 Wheel Question</button></aside><main><h1>TEACHER MARY HQ</h1><section id="home" class="card"><select id="grade"><option>Grade 3</option><option>Grade 4</option></select><select id="subject"><option>Computer</option><option>Makabansa</option></select><select id="week"><option>Week 1</option></select><button onclick="loadResource()">Open PowerPoint</button><div id="viewer"></div></section><section id="treasure" class="card" style="display:none"><h2>🏴‍☠️ Treasure Word Hunt</h2></section><section id="wheel" class="card" style="display:none"><h2>🎡 Wheel of Question</h2></section></main><script>let resources=[];fetch('resources.json').then(r=>r.json()).then(d=>resources=d).catch(e=>console.log(e));function show(id){document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block'}function c(v){return v.replace(/\s/g,'').toUpperCase()}function loadResource(){let g=grade.value,s=subject.value,w=week.value;let r=resources.find(x=>c(x.GRADE)==c(g)&&c(x.SUBJECT)==c(s)&&c(x.WEEK)==c(w)&&c(x.CATEGORY)=='POWERPOINT');viewer.innerHTML=r?r.SLIDES.map(i=>`<img src="${i}">`).join(''):'No resource found'}} </script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEACHER MARY HQ</title>
+<style>
+body{font-family:Arial;background:#f3f4f6;margin:0;padding:20px}
+.card{background:white;padding:20px;border-radius:15px}
+img{width:100%;max-width:900px;display:block;margin:10px auto}
+button,select{padding:10px;margin:5px}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h1>TEACHER MARY HQ</h1>
+
+<select id="grade">
+<option>Grade 3</option>
+<option>Grade 4</option>
+</select>
+
+<select id="subject">
+<option>Computer</option>
+<option>Makabansa</option>
+<option>Araling Panlipunan</option>
+</select>
+
+<select id="week">
+<option>Week 1</option>
+<option>Week 2</option>
+<option>Week 3</option>
+<option>Week 4</option>
+<option>Week 5</option>
+</select>
+
+<button onclick="loadSlides()">Open PowerPoint</button>
+
+<div id="viewer"></div>
+
+</div>
+
+<script>
+
+let resources=[];
+
+fetch("resources.json")
+.then(response=>{
+    if(!response.ok){
+        throw new Error("resources.json not found");
+    }
+    return response.json();
+})
+.then(data=>{
+    resources=data;
+    console.log("Resources Loaded:",resources);
+})
+.catch(error=>{
+    console.error(error);
+});
+
+
+function clean(text){
+    return text.replace(/\s+/g,"").toUpperCase();
+}
+
+
+function loadSlides(){
+
+    const grade=document.getElementById("grade").value;
+    const subject=document.getElementById("subject").value;
+    const week=document.getElementById("week").value;
+
+    const item=resources.find(r=>
+        clean(r.GRADE)===clean(grade) &&
+        clean(r.SUBJECT)===clean(subject) &&
+        clean(r.WEEK)===clean(week) &&
+        clean(r.CATEGORY)==="POWERPOINT"
+    );
+
+
+    const viewer=document.getElementById("viewer");
+
+    if(!item){
+        viewer.innerHTML="<h3>No PowerPoint slides found.</h3>";
+        return;
+    }
+
+    viewer.innerHTML=item.SLIDES.map(image=>
+        `<img src="${image}" onerror="this.style.display='none'">`
+    ).join("");
+
+}
+
+</script>
+
+</body>
+</html>
