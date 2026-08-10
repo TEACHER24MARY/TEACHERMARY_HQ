@@ -1561,7 +1561,8 @@ loadGitHubResources();
     const term = document.getElementById('term-select').value.toUpperCase();
     const week = document.getElementById('week-select').value.toUpperCase();
 
-    document.getElementById('modal-heading-title').innerText = `${subject} - ${type}`;
+    document.getElementById('modal-heading-title').innerText =
+    `${subject} - ${type}`;
 
     const container = document.getElementById('modal-dynamic-container');
 
@@ -1573,43 +1574,36 @@ loadGitHubResources();
         item.CATEGORY === type.toUpperCase()
     );
 
-    if(resource){
+    if(resource && resource.SLIDES && resource.SLIDES.length > 0){
+
+        currentSlideIndex = 0;
 
         container.innerHTML = `
-        <div style="
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100%;
-        ">
-        <img
-        src="${resource.SLIDES[0]}"
+        <img 
+        src="${resource.SLIDES[currentSlideIndex]}"
         style="
         max-width:100%;
         max-height:70vh;
         object-fit:contain;
+        margin:auto;
         ">
-        </div>
         `;
 
     } else {
 
         container.innerHTML = `
-        <p style="
-        text-align:center;
-        padding:40px;
-        color:#6b7280;
-        ">
-        No ${type} available.
+        <p style="text-align:center;padding:40px;color:#6b7280;">
+        No PowerPoint slides available.
         </p>
         `;
+
     }
 
     document.getElementById('resource-modal').classList.add('open');
 
 }
 
-        function openPptWithSeatworkIntegration() {
+function openPptWithSeatworkIntegration() {
             const grade = document.getElementById('grade-select')?.value || '';
             const subject = document.getElementById('subject-select')?.value || '';
             const term = document.getElementById('term-select')?.value || '';
