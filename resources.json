@@ -2,7 +2,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -41,7 +41,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -80,7 +80,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -119,7 +119,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -158,7 +158,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -197,7 +197,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -236,7 +236,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -275,7 +275,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -314,7 +314,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -353,7 +353,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -392,7 +392,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -431,7 +431,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -470,7 +470,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -509,7 +509,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -548,7 +548,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "COMPUTER",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1172,7 +1172,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1211,7 +1211,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1250,7 +1250,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1289,7 +1289,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1328,7 +1328,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1367,7 +1367,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1406,7 +1406,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1445,7 +1445,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1484,7 +1484,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1523,7 +1523,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1562,7 +1562,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1601,7 +1601,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1640,7 +1640,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1679,7 +1679,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -1718,7 +1718,7 @@
   {
     "GRADE": "GRADE 3",
     "SUBJECT": "MAKABANSA",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2342,7 +2342,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2381,7 +2381,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2420,7 +2420,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2459,7 +2459,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2498,7 +2498,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 1",
+    "TERM": "TERM1",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2537,7 +2537,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2576,7 +2576,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2615,7 +2615,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2654,7 +2654,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2693,7 +2693,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 2",
+    "TERM": "TERM2",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2732,7 +2732,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK1",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2771,7 +2771,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK2",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2810,7 +2810,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK3",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2849,7 +2849,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK4",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
@@ -2888,7 +2888,7 @@
   {
     "GRADE": "GRADE 4",
     "SUBJECT": "ARALING PANLIPUNAN",
-    "TERM": "TERM 3",
+    "TERM": "TERM3",
     "WEEK": "WEEK5",
     "CATEGORY": "POWERPOINT",
     "SLIDES": [
