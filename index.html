@@ -78,18 +78,43 @@
         }
 
         header {
-            background-color: var(--card-bg);
-            padding: 16px 32px;
-            border-bottom: 1px solid var(--border-color);
+            margin: 18px 25px;
+            padding: 24px 32px;
+            background: linear-gradient(135deg, #fff7ed, #fdf2f8, #eff6ff);
+            border: 5px solid #38bdf8;
+            border-radius: 35px;
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.25);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Fixed TEACHER MARY Header */
+        header {
+            position: sticky;
+            top: 18px;
+            z-index: 9999;
+        }
+
+        main {
+            position: relative;
         }
 
         header h1 {
-            font-size: 1.5rem;
-            color: var(--text-main);
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-align: center;
+            font-family: 'Comic Sans MS', 'Trebuchet MS', cursive;
         }
+
+        .rainbow-title span:nth-child(5n+1){color:#3b82f6;}
+        .rainbow-title span:nth-child(5n+2){color:#ef4444;}
+        .rainbow-title span:nth-child(5n+3){color:#22c55e;}
+        .rainbow-title span:nth-child(5n+4){color:#eab308;}
+        .rainbow-title span:nth-child(5n+5){color:#a855f7;}
 
         /* Attractive Purple Teacher Title Decoration */
         .teacher-title-badge {
@@ -732,7 +757,37 @@
             font-weight: 600;
             z-index: 10;
         }
-    </style>
+    
+/* ===== Collapsing Teacher Mary Header ===== */
+header {
+    transition: all 0.35s ease;
+    position: relative;
+}
+
+header.compact-header {
+    padding: 8px 20px !important;
+    margin: 8px 15px !important;
+    border-width: 2px !important;
+    border-radius: 18px !important;
+}
+
+header.compact-header h1 {
+    font-size: 1.25rem !important;
+    letter-spacing: 1px;
+}
+
+header.compact-header .teacher-title-badge,
+header.compact-header #saved-indicator {
+    display: none !important;
+}
+
+body.activity-open header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+</style>
 </head>
 <body>
 
@@ -748,7 +803,15 @@
 
     <main>
         <header>
-            <h1 id="page-title">Welcome to TEACHER MARY HQ</h1>
+            <h1 id="page-title" class="rainbow-title">
+                <span>T</span><span>E</span><span>A</span><span>C</span><span>H</span><span>E</span><span>R</span>
+                <span> </span>
+                <span>M</span><span>A</span><span>R</span><span>Y</span><span>'</span><span>S</span>
+                <span> </span>
+                <span>L</span><span>E</span><span>A</span><span>R</span><span>N</span><span>I</span><span>N</span><span>G</span>
+                <span> </span>
+                <span>W</span><span>E</span><span>B</span>
+            </h1>
             <div style="display: flex; align-items: center; gap: 16px;">
                 <span class="teacher-title-badge">✨ Teacher Mary</span>
                 <span id="saved-indicator" style="font-size: 0.85rem; color: #10b981; font-weight: 500;">💾 Work Saved Locally</span>
@@ -2041,7 +2104,22 @@ loadGoogleSeatwork();
             renderFileList();
         });
 
-        function switchTab(tabName, element) {
+        
+function setHeaderMode(mode){
+    const header = document.querySelector("main header");
+    if(!header) return;
+
+    if(mode === "compact"){
+        header.classList.add("compact-header");
+        document.body.classList.add("activity-open");
+    } else {
+        header.classList.remove("compact-header");
+        document.body.classList.remove("activity-open");
+    }
+}
+
+
+function switchTab(tabName, element) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
             if (element) element.classList.add('active');
@@ -2052,15 +2130,19 @@ loadGoogleSeatwork();
             }
 
             if (tabName === 'home') {
+                setHeaderMode('full');
                 document.getElementById('home-section')?.classList.add('active');
                 document.getElementById('page-title').innerText = "Welcome to TEACHER MARY HQ";
             } else if (tabName === 'treasure-hunt') {
+                setHeaderMode('compact');
                 document.getElementById('treasure-hunt-section')?.classList.add('active');
                 document.getElementById('page-title').innerText = "Treasure Word Hunt Activity";
             } else if (tabName === 'wheel-question') {
+                setHeaderMode('compact');
                 document.getElementById('wheel-question-section')?.classList.add('active');
                 document.getElementById('page-title').innerText = "Wheel of Question Activity";
             } else if (tabName === 'settings') {
+                setHeaderMode('compact');
                 document.getElementById('settings-section')?.classList.add('active');
                 document.getElementById('page-title').innerText = "Settings & Resource Uploads";
                 renderFileList();
@@ -2179,6 +2261,7 @@ loadGoogleSeatwork();
 
     }
 
+    setHeaderMode('compact');
     document.getElementById('resource-modal').classList.add('open');
 
 }
@@ -2224,8 +2307,6 @@ async function openPptWithSeatworkIntegration() {
             name: path.split("/").pop()
         }));
     }
-
-    window.slideList = slideList;
 
     currentSlideIndex = 0;
 
