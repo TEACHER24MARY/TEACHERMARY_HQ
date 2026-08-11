@@ -2015,6 +2015,10 @@ body.activity-open header {
         let touchStartX = 0;
         let touchEndX = 0;
 
+// Fullscreen image swipe navigation
+let fullscreenSlideIndex = 0;
+let fullscreenSlideList = [];
+
 
 // GOOGLE GAME SCORE DATABASE CONNECTION
 const GAME_SCORE_URL = "https://script.google.com/macros/s/AKfycbyHUyenm977r8d3yi7e0rQ0mAbDKccbYAqSLs27sl6VAWuayyyfOwnFU4Cm3lplZDEE6A/exec";
@@ -2198,13 +2202,73 @@ function switchTab(tabName, element) {
         function openImageFullscreen(imgSrc) {
             const lightbox = document.getElementById('lightbox-modal');
             const lightboxImg = document.getElementById('lightbox-img');
+
+            // Get current PowerPoint slides
+            const grade = document.getElementById('grade-select')?.value || '';
+            const subject = document.getElementById('subject-select')?.value || '';
+            const term = document.getElementById('term-select')?.value || '';
+            const week = document.getElementById('week-select')?.value || '';
+
+            const resource = githubResources.find(item =>
+                item.GRADE?.trim().toUpperCase() === grade.trim().toUpperCase() &&
+                item.SUBJECT?.trim().replaceAll(' ','').toUpperCase() === subject.replaceAll(' ','').toUpperCase() &&
+                item.TERM?.trim().toUpperCase() === term.toUpperCase() &&
+                item.WEEK?.trim().toUpperCase() === week.toUpperCase() &&
+                item.CATEGORY?.trim().toUpperCase() === 'POWERPOINT'
+            );
+
+            if(resource?.SLIDES){
+                fullscreenSlideList = resource.SLIDES;
+                fullscreenSlideIndex = fullscreenSlideList.indexOf(imgSrc);
+                if(fullscreenSlideIndex < 0) fullscreenSlideIndex = 0;
+            }
+
             if (lightbox && lightboxImg) {
                 lightboxImg.src = imgSrc;
                 lightbox.classList.add('open');
             }
         }
 
-        function closeLightbox() {
+        function changeFullscreenSlide(direction){
+            if(!fullscreenSlideList.length) return;
+
+            fullscreenSlideIndex += direction;
+
+            if(fullscreenSlideIndex < 0)
+                fullscreenSlideIndex = fullscreenSlideList.length - 1;
+
+            if(fullscreenSlideIndex >= fullscreenSlideList.length)
+                fullscreenSlideIndex = 0;
+
+            document.getElementById('lightbox-img').src =
+                fullscreenSlideList[fullscreenSlideIndex];
+        }
+
+        
+// Swipe while fullscreen image is open
+document.addEventListener('DOMContentLoaded',()=>{
+    const lightboxImg = document.getElementById('lightbox-img');
+    if(!lightboxImg) return;
+
+    lightboxImg.addEventListener('touchstart',(e)=>{
+        touchStartX = e.changedTouches[0].screenX;
+    },{passive:true});
+
+    lightboxImg.addEventListener('touchend',(e)=>{
+        touchEndX = e.changedTouches[0].screenX;
+        const distance = touchEndX - touchStartX;
+
+        if(Math.abs(distance) > 50){
+            if(distance < 0){
+                changeFullscreenSlide(1); // swipe left next
+            } else {
+                changeFullscreenSlide(-1); // swipe right previous
+            }
+        }
+    },{passive:true});
+});
+
+function closeLightbox() {
             const lightbox = document.getElementById('lightbox-modal');
             if (lightbox) lightbox.classList.remove('open');
         }
