@@ -2263,25 +2263,42 @@ async function openContent(type) {
     if(resource && resource.SLIDES && resource.SLIDES.length > 0){
 
         currentSlideIndex = 0;
+        window.currentSlidesList = resource.SLIDES;
 
         container.innerHTML = `
-        <img 
-        src="${resource.SLIDES[currentSlideIndex]}"
-        onclick="openImageFullscreen(this.src)"
-        style="
-        max-width:100%;
-        max-height:70vh;
-        object-fit:contain;
-        margin:auto;
-        cursor:pointer;
-        ">
+        <div class="ppt-carousel-wrapper" id="ppt-carousel-box">
+            <div class="ppt-carousel-slide active">
+                <button class="img-fullscreen-btn"
+                onclick="openImageFullscreen(document.getElementById('current-slide-image').src)">
+                ⛶ Full Screen Image
+                </button>
+                <img id="current-slide-image"
+                src="${resource.SLIDES[currentSlideIndex]}"
+                onclick="openImageFullscreen(this.src)">
+            </div>
+
+            ${resource.SLIDES.length > 1 ? `
+            <button class="carousel-btn carousel-prev"
+            onclick="changeSlide(-1)">&#10094;</button>
+            <button class="carousel-btn carousel-next"
+            onclick="changeSlide(1)">&#10095;</button>
+            ` : ""}
+
+            <div class="carousel-indicators" id="carousel-indicator-text">
+            Slide 1 of ${resource.SLIDES.length}
+            </div>
+        </div>
         `;
+
+        setupTouchSwipeListeners();
 
     } else {
 
+        window.currentSlidesList = [];
+
         container.innerHTML = `
         <p style="text-align:center;padding:40px;color:#6b7280;">
-        No PowerPoint slides available.
+        No ${type} slides available.
         </p>
         `;
 
@@ -2406,6 +2423,7 @@ async function openPptWithSeatworkIntegration() {
     `;
 
     window.slideTotalCount = slideList.length;
+    window.currentSlidesList = slideList.map(s => s.dataUrl);
 
     document.getElementById('resource-modal')?.classList.add('open');
     setHeaderCollapse(true);
@@ -2441,8 +2459,24 @@ async function openPptWithSeatworkIntegration() {
             }, { passive: true });
         }
 
+        // Left/Right arrow key navigation for PowerPoint & Quiz slides.
+        // Works whether or not the modal is in browser fullscreen mode.
+        document.addEventListener('keydown', (e) => {
+            const modalOpen = document.getElementById('resource-modal')?.classList.contains('open');
+            if (!modalOpen) return;
+            if (!window.currentSlidesList || window.currentSlidesList.length <= 1) return;
+
+            if (e.key === 'ArrowRight') { e.preventDefault(); changeSlide(1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+        });
+
         function changeSlide(direction) {
-            const total = window.slideTotalCount || 0;
+            // window.currentSlidesList is set by whichever viewer is currently
+            // open (PowerPoint-with-seatwork carousel, or the Quiz/other
+            // single-resource viewer via openContent()).
+            const activeList = window.currentSlidesList || [];
+
+            const total = activeList.length;
             if (total === 0) return;
 
             currentSlideIndex += direction;
@@ -2450,23 +2484,8 @@ async function openPptWithSeatworkIntegration() {
             else if (currentSlideIndex >= total) currentSlideIndex = 0;
 
             const img = document.getElementById('current-slide-image');
-            if (img && githubResources) {
-                const grade = document.getElementById('grade-select')?.value || '';
-                const subject = document.getElementById('subject-select')?.value || '';
-                const term = document.getElementById('term-select')?.value || '';
-                const week = document.getElementById('week-select')?.value || '';
-
-                const resource = githubResources.find(item =>
-                    item.GRADE?.trim().toUpperCase() === grade.toUpperCase() &&
-                    item.SUBJECT?.trim().replaceAll(' ','').toUpperCase() === subject.replaceAll(' ','').toUpperCase() &&
-                    item.TERM?.trim().toUpperCase() === term.toUpperCase() &&
-                    item.WEEK?.trim().toUpperCase() === week.toUpperCase() &&
-                    item.CATEGORY?.trim().toUpperCase() === 'POWERPOINT'
-                );
-
-                if (resource?.SLIDES?.[currentSlideIndex]) {
-                    img.src = resource.SLIDES[currentSlideIndex];
-                }
+            if (img && activeList[currentSlideIndex]) {
+                img.src = activeList[currentSlideIndex];
             }
 
             const indicator = document.getElementById('carousel-indicator-text');
