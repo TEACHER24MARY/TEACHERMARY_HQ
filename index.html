@@ -645,6 +645,65 @@ header.collapsed-header .collapsed-logo {
             z-index: 2010;
         }
 
+        .lightbox-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2010;
+            transition: background-color 0.2s;
+        }
+
+        .lightbox-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+
+        .lightbox-indicator {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 2010;
+        }
+
+        /* Bigger, easier-to-tap arrows on touch devices and in real fullscreen */
+        @media (pointer: coarse) {
+            .lightbox-nav-btn {
+                width: 68px;
+                height: 68px;
+                font-size: 2rem;
+            }
+            .carousel-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
+            }
+        }
+
+        .modal-content:fullscreen .carousel-btn {
+            width: 64px;
+            height: 64px;
+            font-size: 1.8rem;
+        }
+
         /* Seatwork Dropdown Toggle List */
         .seatwork-dropdown-wrapper {
             margin-bottom: 12px;
@@ -2038,7 +2097,10 @@ header.collapsed-header .collapsed-logo {
 
     <div id="lightbox-modal" class="lightbox-overlay" onclick="closeLightbox()">
         <button class="close-lightbox" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav-btn lightbox-prev" onclick="event.stopPropagation(); changeSlide(-1);">&#10094;</button>
         <img id="lightbox-img" class="lightbox-content" src="" alt="Full Screen Image">
+        <button class="lightbox-nav-btn lightbox-next" onclick="event.stopPropagation(); changeSlide(1);">&#10095;</button>
+        <div class="lightbox-indicator" id="lightbox-indicator-text"></div>
     </div>
 
     <script>
@@ -2215,7 +2277,19 @@ loadGoogleSeatwork();
             if (lightbox && lightboxImg) {
                 lightboxImg.src = imgSrc;
                 lightbox.classList.add('open');
+                updateLightboxNav();
             }
+        }
+
+        function updateLightboxNav() {
+            const total = (window.currentSlidesList || []).length;
+            const show = total > 1;
+            const prevBtn = document.querySelector('.lightbox-prev');
+            const nextBtn = document.querySelector('.lightbox-next');
+            const indicator = document.getElementById('lightbox-indicator-text');
+            if (prevBtn) prevBtn.style.display = show ? 'flex' : 'none';
+            if (nextBtn) nextBtn.style.display = show ? 'flex' : 'none';
+            if (indicator) indicator.innerText = show ? `Slide ${currentSlideIndex + 1} of ${total}` : '';
         }
 
         function closeLightbox() {
@@ -2460,15 +2534,36 @@ async function openPptWithSeatworkIntegration() {
         }
 
         // Left/Right arrow key navigation for PowerPoint & Quiz slides.
-        // Works whether or not the modal is in browser fullscreen mode.
+        // Works whether or not the modal is in browser fullscreen mode,
+        // and whether the carousel or the tap-to-fullscreen lightbox is open.
         document.addEventListener('keydown', (e) => {
             const modalOpen = document.getElementById('resource-modal')?.classList.contains('open');
-            if (!modalOpen) return;
+            const lightboxOpen = document.getElementById('lightbox-modal')?.classList.contains('open');
+            if (!modalOpen && !lightboxOpen) return;
             if (!window.currentSlidesList || window.currentSlidesList.length <= 1) return;
 
             if (e.key === 'ArrowRight') { e.preventDefault(); changeSlide(1); }
             else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
         });
+
+        // Swipe support for the tap-to-fullscreen image lightbox.
+        // The lightbox is static in the DOM (unlike the carousel, which is
+        // rebuilt each time a resource opens), so these listeners are set
+        // up once, here, rather than inside setupTouchSwipeListeners().
+        (function setupLightboxSwipeListeners() {
+            const lightbox = document.getElementById('lightbox-modal');
+            if (!lightbox) return;
+            let lbTouchStartX = 0, lbTouchEndX = 0;
+            lightbox.addEventListener('touchstart', (e) => {
+                lbTouchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            lightbox.addEventListener('touchend', (e) => {
+                lbTouchEndX = e.changedTouches[0].screenX;
+                const swipeThreshold = 50;
+                if (lbTouchEndX < lbTouchStartX - swipeThreshold) changeSlide(1);
+                else if (lbTouchEndX > lbTouchStartX + swipeThreshold) changeSlide(-1);
+            }, { passive: true });
+        })();
 
         function changeSlide(direction) {
             // window.currentSlidesList is set by whichever viewer is currently
@@ -2490,6 +2585,16 @@ async function openPptWithSeatworkIntegration() {
 
             const indicator = document.getElementById('carousel-indicator-text');
             if (indicator) indicator.innerText = `Slide ${currentSlideIndex + 1} of ${total}`;
+
+            // Keep the lightbox (tap-to-fullscreen image view) in sync too,
+            // so swiping/arrow-keys work there as well.
+            const lightbox = document.getElementById('lightbox-modal');
+            if (lightbox && lightbox.classList.contains('open')) {
+                const lightboxImg = document.getElementById('lightbox-img');
+                if (lightboxImg && activeList[currentSlideIndex]) lightboxImg.src = activeList[currentSlideIndex];
+                const lbIndicator = document.getElementById('lightbox-indicator-text');
+                if (lbIndicator) lbIndicator.innerText = `Slide ${currentSlideIndex + 1} of ${total}`;
+            }
         }
 
         function toggleSeatworkPane() {
