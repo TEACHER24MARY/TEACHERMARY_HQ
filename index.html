@@ -631,6 +631,57 @@ header.collapsed-header .collapsed-logo {
             max-width: 95vw;
             max-height: 95vh;
             object-fit: contain;
+            -webkit-user-drag: none;
+            user-select: none;
+            touch-action: none;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .lightbox-content.zoom-transition {
+            transition: transform 0.2s ease;
+        }
+
+        .lightbox-zoom-controls {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            gap: 8px;
+            z-index: 2010;
+        }
+
+        .lightbox-zoom-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 1.3rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .lightbox-zoom-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lightbox-zoom-reset {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        @media (pointer: coarse) {
+            .lightbox-zoom-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 1.5rem;
+            }
         }
 
         .close-lightbox {
@@ -828,6 +879,9 @@ header.collapsed-header .collapsed-logo {
             max-height: 100%;
             object-fit: contain;
             cursor: pointer;
+            -webkit-user-drag: none;
+            user-select: none;
+            touch-action: pan-y;
         }
 
         .carousel-btn {
@@ -2098,9 +2152,14 @@ header.collapsed-header .collapsed-logo {
     <div id="lightbox-modal" class="lightbox-overlay" onclick="closeLightbox()">
         <button class="close-lightbox" onclick="closeLightbox()">&times;</button>
         <button class="lightbox-nav-btn lightbox-prev" onclick="event.stopPropagation(); changeSlide(-1);">&#10094;</button>
-        <img id="lightbox-img" class="lightbox-content" src="" alt="Full Screen Image">
+        <img id="lightbox-img" class="lightbox-content" src="" alt="Full Screen Image" draggable="false" onclick="event.stopPropagation();">
         <button class="lightbox-nav-btn lightbox-next" onclick="event.stopPropagation(); changeSlide(1);">&#10095;</button>
         <div class="lightbox-indicator" id="lightbox-indicator-text"></div>
+        <div class="lightbox-zoom-controls" onclick="event.stopPropagation();">
+            <button class="lightbox-zoom-btn" onclick="lightboxZoomOut()">&#8722;</button>
+            <button class="lightbox-zoom-btn lightbox-zoom-reset" onclick="resetLightboxZoom()">1x</button>
+            <button class="lightbox-zoom-btn" onclick="lightboxZoomIn()">&#43;</button>
+        </div>
     </div>
 
     <script>
@@ -2278,6 +2337,7 @@ loadGoogleSeatwork();
                 lightboxImg.src = imgSrc;
                 lightbox.classList.add('open');
                 updateLightboxNav();
+                resetLightboxZoom();
             }
         }
 
@@ -2348,6 +2408,7 @@ async function openContent(type) {
                 </button>
                 <img id="current-slide-image"
                 src="${resource.SLIDES[currentSlideIndex]}"
+                draggable="false"
                 onclick="openImageFullscreen(this.src)">
             </div>
 
@@ -2444,6 +2505,7 @@ async function openPptWithSeatworkIntegration() {
                             </button>
                             <img id="current-slide-image"
                             src="${slideList[0]?.dataUrl || ''}"
+                            draggable="false"
                             onclick="openImageFullscreen(this.src)">
                         </div>
 
@@ -2524,12 +2586,35 @@ async function openPptWithSeatworkIntegration() {
         function setupTouchSwipeListeners() {
             const carouselBox = document.getElementById('ppt-carousel-box');
             if (!carouselBox) return;
-            carouselBox.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+            let cbStartX = 0, cbStartY = 0, cbDragging = false;
+
+            carouselBox.addEventListener('touchstart', (e) => {
+                if (!e.changedTouches || e.changedTouches.length === 0) return;
+                cbStartX = e.changedTouches[0].screenX;
+                cbStartY = e.changedTouches[0].screenY;
+                cbDragging = true;
+                touchStartX = cbStartX;
+            }, { passive: true });
+
+            carouselBox.addEventListener('touchmove', (e) => {
+                if (!cbDragging || !e.changedTouches || e.changedTouches.length === 0) return;
+                const dx = Math.abs(e.changedTouches[0].screenX - cbStartX);
+                const dy = Math.abs(e.changedTouches[0].screenY - cbStartY);
+                // Stop the browser's native image drag/pan once the gesture
+                // is clearly a horizontal swipe, so our swipe wins on tablets.
+                if (dx > dy && dx > 10) e.preventDefault();
+            }, { passive: false });
+
             carouselBox.addEventListener('touchend', (e) => {
+                if (!cbDragging || !e.changedTouches || e.changedTouches.length === 0) return;
+                cbDragging = false;
                 touchEndX = e.changedTouches[0].screenX;
-                const swipeThreshold = 50;
-                if (touchEndX < touchStartX - swipeThreshold) changeSlide(1);
-                if (touchEndX > touchStartX + swipeThreshold) changeSlide(-1);
+                const dy = e.changedTouches[0].screenY - cbStartY;
+                const swipeThreshold = 40;
+                const dx = touchEndX - cbStartX;
+                if (Math.abs(dx) > swipeThreshold && Math.abs(dx) > Math.abs(dy)) {
+                    if (dx < 0) changeSlide(1); else changeSlide(-1);
+                }
             }, { passive: true });
         }
 
@@ -2546,22 +2631,137 @@ async function openPptWithSeatworkIntegration() {
             else if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
         });
 
-        // Swipe support for the tap-to-fullscreen image lightbox.
-        // The lightbox is static in the DOM (unlike the carousel, which is
-        // rebuilt each time a resource opens), so these listeners are set
-        // up once, here, rather than inside setupTouchSwipeListeners().
-        (function setupLightboxSwipeListeners() {
+        // Zoom state for the tap-to-fullscreen image lightbox.
+        let lbScale = 1, lbPanX = 0, lbPanY = 0;
+        const LB_MIN_SCALE = 1, LB_MAX_SCALE = 4;
+
+        function applyLightboxTransform() {
+            const img = document.getElementById('lightbox-img');
+            if (img) img.style.transform = `translate(${lbPanX}px, ${lbPanY}px) scale(${lbScale})`;
+        }
+
+        function resetLightboxZoom() {
+            lbScale = 1; lbPanX = 0; lbPanY = 0;
+            const img = document.getElementById('lightbox-img');
+            if (img) {
+                img.classList.add('zoom-transition');
+                applyLightboxTransform();
+            }
+        }
+
+        function lightboxZoomIn() {
+            const img = document.getElementById('lightbox-img');
+            if (img) img.classList.add('zoom-transition');
+            lbScale = Math.min(LB_MAX_SCALE, lbScale + 0.5);
+            applyLightboxTransform();
+        }
+
+        function lightboxZoomOut() {
+            const img = document.getElementById('lightbox-img');
+            if (img) img.classList.add('zoom-transition');
+            lbScale = Math.max(LB_MIN_SCALE, lbScale - 0.5);
+            if (lbScale === LB_MIN_SCALE) { lbPanX = 0; lbPanY = 0; }
+            applyLightboxTransform();
+        }
+
+        // Swipe / pinch-zoom / pan support for the tap-to-fullscreen image
+        // lightbox. The lightbox is static in the DOM (unlike the carousel,
+        // which is rebuilt each time a resource opens), so these listeners
+        // are set up once, here.
+        //
+        // Behavior:
+        //  - Two fingers moving apart/together => pinch-zoom.
+        //  - One finger while zoomed in (scale > 1) => pan the image.
+        //  - One finger while at 1x => swipe left/right changes slides.
+        //  - Double-tap => toggle between 1x and 2x zoom.
+        // touchmove calls preventDefault() once a gesture is recognized so
+        // the browser's own drag/zoom handling never fights with ours.
+        (function setupLightboxGestureListeners() {
             const lightbox = document.getElementById('lightbox-modal');
-            if (!lightbox) return;
-            let lbTouchStartX = 0, lbTouchEndX = 0;
+            const img = document.getElementById('lightbox-img');
+            if (!lightbox || !img) return;
+
+            let lbStartX = 0, lbStartY = 0, lbDragging = false;
+            let isPinching = false, pinchStartDist = 0, pinchStartScale = 1;
+            let panStartX = 0, panStartY = 0, panOriginX = 0, panOriginY = 0;
+            let lastTapTime = 0;
+
+            function touchDistance(t0, t1) {
+                const dx = t1.clientX - t0.clientX;
+                const dy = t1.clientY - t0.clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+
             lightbox.addEventListener('touchstart', (e) => {
-                lbTouchStartX = e.changedTouches[0].screenX;
+                img.classList.remove('zoom-transition');
+                if (e.touches.length === 2) {
+                    isPinching = true;
+                    lbDragging = false;
+                    pinchStartDist = touchDistance(e.touches[0], e.touches[1]);
+                    pinchStartScale = lbScale;
+                } else if (e.touches.length === 1) {
+                    isPinching = false;
+                    lbDragging = true;
+                    lbStartX = e.touches[0].screenX;
+                    lbStartY = e.touches[0].screenY;
+                    panStartX = e.touches[0].screenX;
+                    panStartY = e.touches[0].screenY;
+                    panOriginX = lbPanX;
+                    panOriginY = lbPanY;
+
+                    const now = Date.now();
+                    if (now - lastTapTime < 300) {
+                        // Double-tap: toggle zoom.
+                        if (lbScale > 1) { resetLightboxZoom(); }
+                        else { img.classList.add('zoom-transition'); lbScale = 2; applyLightboxTransform(); }
+                        lastTapTime = 0;
+                    } else {
+                        lastTapTime = now;
+                    }
+                }
             }, { passive: true });
+
+            lightbox.addEventListener('touchmove', (e) => {
+                if (isPinching && e.touches.length === 2) {
+                    e.preventDefault();
+                    const dist = touchDistance(e.touches[0], e.touches[1]);
+                    lbScale = Math.min(LB_MAX_SCALE, Math.max(LB_MIN_SCALE, pinchStartScale * (dist / pinchStartDist)));
+                    if (lbScale === LB_MIN_SCALE) { lbPanX = 0; lbPanY = 0; }
+                    applyLightboxTransform();
+                    return;
+                }
+                if (!lbDragging || e.touches.length !== 1) return;
+
+                if (lbScale > 1) {
+                    // Panning a zoomed-in image.
+                    e.preventDefault();
+                    lbPanX = panOriginX + (e.touches[0].screenX - panStartX);
+                    lbPanY = panOriginY + (e.touches[0].screenY - panStartY);
+                    applyLightboxTransform();
+                } else {
+                    // At 1x — a horizontal drag is a swipe-to-navigate gesture.
+                    const dx = Math.abs(e.touches[0].screenX - lbStartX);
+                    const dy = Math.abs(e.touches[0].screenY - lbStartY);
+                    if (dx > dy && dx > 10) e.preventDefault();
+                }
+            }, { passive: false });
+
             lightbox.addEventListener('touchend', (e) => {
-                lbTouchEndX = e.changedTouches[0].screenX;
-                const swipeThreshold = 50;
-                if (lbTouchEndX < lbTouchStartX - swipeThreshold) changeSlide(1);
-                else if (lbTouchEndX > lbTouchStartX + swipeThreshold) changeSlide(-1);
+                if (isPinching) {
+                    isPinching = false;
+                    return;
+                }
+                if (!lbDragging || !e.changedTouches || e.changedTouches.length === 0) return;
+                lbDragging = false;
+
+                if (lbScale > 1) return; // was panning, not swiping
+
+                const dx = e.changedTouches[0].screenX - lbStartX;
+                const dy = e.changedTouches[0].screenY - lbStartY;
+                const swipeThreshold = 40;
+                if (Math.abs(dx) > swipeThreshold && Math.abs(dx) > Math.abs(dy)) {
+                    if (dx < 0) changeSlide(1); else changeSlide(-1);
+                }
             }, { passive: true });
         })();
 
@@ -2592,6 +2792,7 @@ async function openPptWithSeatworkIntegration() {
             if (lightbox && lightbox.classList.contains('open')) {
                 const lightboxImg = document.getElementById('lightbox-img');
                 if (lightboxImg && activeList[currentSlideIndex]) lightboxImg.src = activeList[currentSlideIndex];
+                resetLightboxZoom();
                 const lbIndicator = document.getElementById('lightbox-indicator-text');
                 if (lbIndicator) lbIndicator.innerText = `Slide ${currentSlideIndex + 1} of ${total}`;
             }
